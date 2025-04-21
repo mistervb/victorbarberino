@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Victor Barberino | Desenvolvedor Fullstack</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/sf-pro-display">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<!-- Header Section -->
+<header class="header" id="home">
+  <nav class="navbar navbar-expand-lg fixed-top backdrop-blur">
+    <div class="container">
+      <a class="navbar-brand" href="#home">VB</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#sobre">Sobre</a></li>
+          <li class="nav-item"><a class="nav-link" href="#servicos">Serviços</a></li>
+          <li class="nav-item"><a class="nav-link" href="#projetos">Projetos</a></li>
+          <li class="nav-item"><a class="nav-link" href="#depoimentos">Depoimentos</a></li>
+          <li class="nav-item"><a class="nav-link contact-btn" href="#contato">Contato</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="hero-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <span class="hero-badge">Desenvolvedor Fullstack</span>
+          <h1 class="display-4">Victor Barberino</h1>
+          <p class="hero-text">Transformando ideias em soluções digitais inovadoras com a precisão e elegância que seu projeto merece.</p>
+          <div class="hero-buttons">
+            <a href="#contato" class="cta-button primary">Iniciar Projeto</a>
+            <a href="#projetos" class="cta-button secondary">Ver Projetos</a>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="hero-image">
+            <div class="profile-placeholder macos-element">
+              <!-- <i class="fas fa-user-circle"></i> -->
+              <img th:src="@{/assets/me.png}" alt="Profile">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- About Section -->
+<section id="sobre" class="section-padding">
+  <div class="container">
+    <h2 class="section-title">Sobre Mim</h2>
+    <div class="row">
+      <div class="col-lg-6">
+        <p class="about-text">
+          Sou um Desenvolvedor Fullstack especializado em desenvolvimento web, mobile e automação com bots.
+          Atualmente, trabalho como desenvolvedor Java em uma fintech, onde crio soluções tecnológicas
+          para o setor financeiro.
+        </p>
+        <div class="skills-container">
+          <h3>Tecnologias</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">Java</span>
+            <span class="skill-tag">Kotlin</span>
+            <span class="skill-tag">JavaScript</span>
+            <span class="skill-tag">TypeScript</span>
+            <span class="skill-tag">Spring</span>
+            <span class="skill-tag">React</span>
+            <span class="skill-tag">Angular</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="specialization-cards">
+          <div class="spec-card">
+            <i class="fas fa-code"></i>
+            <h4>Desenvolvimento Web</h4>
+            <p>Fullstack, APIs RESTful, Microserviços</p>
+          </div>
+          <div class="spec-card">
+            <i class="fas fa-mobile-alt"></i>
+            <h4>Mobile</h4>
+            <p>Apps híbridos para iOS e Android</p>
+          </div>
+          <div class="spec-card">
+            <i class="fas fa-robot"></i>
+            <h4>Automação</h4>
+            <p>Bots e interfaces interativas</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services Section -->
+<section id="servicos" class="background-liped section-padding bg-light">
+  <div class="container">
+    <h2 class="section-title">Serviços</h2>
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="service-card">
+          <i class="fas fa-laptop-code"></i>
+          <h3>Desenvolvimento Web</h3>
+          <p>Sistemas web completos com foco em performance e experiência do usuário</p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="service-card">
+          <i class="fas fa-mobile-alt"></i>
+          <h3>Apps Mobile</h3>
+          <p>Aplicativos híbridos para iOS e Android com React Native</p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="service-card">
+          <i class="fas fa-server"></i>
+          <h3>APIs & Backend</h3>
+          <p>Desenvolvimento de APIs robustas e escaláveis</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects Section -->
+<section id="projetos" class="section-padding">
+  <div class="container">
+    <h2 class="section-title">Projetos</h2>
+    <div class="row" id="projects-grid" th:each="project : ${projects}">
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="project-card">
+          <img th:src="${project.image}" th:alt="${project.title}" class="project-image">
+          <div class="project-info">
+            <h3 class="project-title" th:text="${project.title}"></h3>
+            <p th:text="${project.description}"></p>
+            <div class="skill-tags" th:each="tag : ${project.tags}">
+              <span class="skill-tag" th:text="${tag}"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section id="depoimentos" class="background-liped section-padding bg-light">
+  <div class="container">
+    <h2 class="section-title">Depoimentos</h2>
+    <div class="testimonials-slider" th:each="testimonial : ${testimonials}">
+      <div class="testimonial-card">
+        <p class="testimonial-text" th:text="${testimonial.text}"></p>
+        <p class="testimonial-author" th:text="${testimonial.author}"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contato" class="section-padding">
+  <div class="container">
+    <h2 class="section-title">Entre em Contato</h2>
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <form id="contact-form" class="contact-form">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Seu Nome" required>
+          </div>
+          <div class="form-group">
+            <input type="email" class="form-control" placeholder="Seu Email" required>
+          </div>
+          <div class="form-group">
+            <textarea class="form-control" placeholder="Sua Mensagem" rows="5" required></textarea>
+          </div>
+          <button type="submit" class="cta-button">Enviar Mensagem</button>
+        </form>
+      </div>
+      <div class="col-lg-5 offset-lg-1">
+        <div class="contact-info">
+          <div>
+            <h3>Vamos Conversar</h3>
+            <p class="mt-3">Estou disponível para projetos freelance, colaborações e oportunidades profissionais.</p>
+          </div>
+          <div>
+            <h4>Redes Sociais</h4>
+            <div class="social-links">
+              <a href="#" class="social-link" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+              <a href="#" class="social-link" title="GitHub"><i class="fab fa-github"></i></a>
+              <a href="#" class="social-link" title="Twitter"><i class="fab fa-twitter"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <p>&copy; <span id="current-year" th:text="${actualYear}"></span> Victor Barberino. Todos os direitos reservados.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>
