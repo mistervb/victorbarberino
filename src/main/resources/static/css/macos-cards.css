@@ -1,0 +1,77 @@
+/* macOS/macbook/iphone style project cards */
+.macos-card {
+  border-radius: 18px;
+  background: rgba(24, 24, 28, 0.88);
+  box-shadow: 0 4px 18px 0 rgba(0,0,0,0.22);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(60,60,70,0.24);
+  overflow: hidden;
+  margin-bottom: 2rem;
+  transition: transform 0.18s cubic-bezier(.4,0,.2,1), box-shadow 0.18s cubic-bezier(.4,0,.2,1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.macos-card:hover {
+  transform: translateY(-2px) scale(1.0125);
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.28);
+}
+.macos-card-bar {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: rgba(32,32,38,0.92);
+  border-bottom: 1px solid rgba(60,60,70,0.18);
+  height: 38px;
+  position: relative;
+}
+.macos-card-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 0.5rem;
+}
+.macos-action-btn {
+  color: #b4b4b4;
+  font-size: 1rem;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0 4px;
+  transition: color 0.17s;
+  text-decoration: none;
+}
+.macos-action-btn:hover { color: #fff; }
+.macos-action-btn.delete:hover { color: #e0443e; }
+.project-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(60,60,70,0.18);
+}
+.project-info {
+  padding: 1rem 1.5rem 1.5rem 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  color: #eaeaea;
+}
+@media (max-width: 900px) {
+  .projects-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .project-image { height: 140px; }
+}
+@media (max-width: 600px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+  .project-image { height: 110px; }
+  .project-info { padding: 0.8rem; }
+}
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 2rem;
+}

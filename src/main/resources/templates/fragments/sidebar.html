@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <aside th:fragment="main_sidebar(activeLink)" class="sidebar">
+        <div class="sidebar-header bg-gradient bg-black">
+            <a href="/" class="brand text-white">VB <code class="text-warning">Admin</code></a>
+            <button id="toggleSidebar" class="toggle-btn">
+                <i class="fas fa-chevron-left toggle-icon"></i>
+            </button>
+        </div>
+        <div class="sidebar-content text-warning bg-gradient bg-black">
+            <nav class="nav-links">
+                <a href="/admin/projects" class="nav-link" th:classappend="${activeLink == 'projects'} ? 'active' : ''">
+                    <i class="fas fa-laptop-code"></i>
+                    <span>Projetos</span>
+                </a>
+                <a href="/admin/dashboard" class="nav-link" th:classappend="${activeLink == 'dashboard'} ? 'active' : ''">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+            </nav>
+        </div>
+        <script>
+            const sidebar = document.querySelector('.sidebar');
+            const toggleBtn = document.getElementById('toggleSidebar');
+            const toggleIcon = toggleBtn.querySelector('.toggle-icon');
+    
+            function updateToggleIcon() {
+                if (sidebar.classList.contains('collapsed')) {
+                    toggleIcon.classList.remove('fa-chevron-left');
+                    toggleIcon.classList.add('fa-chevron-right');
+                } else {
+                    toggleIcon.classList.remove('fa-chevron-right');
+                    toggleIcon.classList.add('fa-chevron-left');
+                }
+            }
+    
+            toggleBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+                updateToggleIcon();
+            });
+    
+            // Para mobile
+            if (window.innerWidth <= 768) {
+                sidebar.classList.add('collapsed');
+                updateToggleIcon();
+            }
+        </script>
+    </aside>
+</body>
+</html>

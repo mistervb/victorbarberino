@@ -1,4 +1,4 @@
-package br.com.victorbarberino.portfolio.testimonial;
+package br.com.victorbarberino.portfolio._domain.testimonial;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

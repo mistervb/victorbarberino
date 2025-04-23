@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/fragments/head('VB Admin - Projetos')}"></head>
+<link rel="stylesheet" th:href="@{/css/sidebar.css}">
+<link rel="stylesheet" th:href="@{/css/topbar.css}">
+<link rel="stylesheet" th:href="@{/css/macos-cards.css}">
+<!-- Bootstrap 5 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<body>
+    <div th:replace="~{/fragments/sidebar :: main_sidebar('projects')}"></div>
+    <div class="main-content p-0">
+        <nav th:replace="~{/fragments/topbar :: topbar}"></nav>
+        <div class="content-wrapper">
+            <h6>Bem-vindo de volta senhor!</h6>
+            <div th:if="${#lists.isEmpty(projects)}">
+                <p>Senhor, nenhum projeto foi cadastrado!</p>
+                <a th:href="@{/admin/projects/new}" class="cta-button">Cadastrar projeto</a>
+            </div>
+            <div th:unless="${#lists.isEmpty(projects)}" class="my-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h4>Seus projetos</h4>
+                    <a th:href="@{/admin/projects/new}" class="cta-button"><i class="fa-solid fa-plus"></i> Cadastrar projeto</a>
+                </div>
+                <div class="projects-grid mt-4" th:each="project : ${projects}">
+                    <div class="macos-card">
+                        <div class="macos-card-bar">
+                            <div class="macos-card-actions">
+                                <a th:href="@{'/admin/projects/edit/' + ${project.projectId}}" title="Editar" class="macos-action-btn"><i class="fas fa-pencil-alt"></i></a>
+                                <a th:href="@{'/admin/projects/delete/' + ${project.projectId}}" title="Apagar" class="macos-action-btn delete" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="fas fa-trash"></i></a>
+                            </div>
+                        </div>
+                        <img th:src="${project.image}" th:alt="${project.title}" class="project-image">
+                        <div class="project-info">
+                            <h3 class="project-title" th:text="${project.title}"></h3>
+                            <p th:text="${project.description}"></p>
+                            <div th:if="${!#lists.isEmpty(project.tags)}" class="skill-tags">
+                                <span class="skill-tag" th:each="tag : ${project.tags}" th:text="${tag}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:if="${!#lists.isEmpty(notifications)}" th:each="notification : ${notifications}">
+        <div th:replace="~{fragments/notifications :: notifications(${notification.type.name().toLowerCase()}, ${notification.message})}"></div>
+    </div>
+    <!-- Bootstrap Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-light">
+          <div class="modal-header border-0">
+            <h5 class="modal-title" id="deleteModalLabel">Confirmar exclusão</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body">
+            Tem certeza que deseja apagar este projeto?
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Sim, apagar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    let deleteUrl = null;
+    document.querySelectorAll('.macos-action-btn.delete').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        deleteUrl = this.getAttribute('href');
+      });
+    });
+    document.getElementById('confirmDeleteBtn').onclick = function() {
+      if (deleteUrl) window.location.href = deleteUrl;
+    };
+    </script>
+</body>
+</html>

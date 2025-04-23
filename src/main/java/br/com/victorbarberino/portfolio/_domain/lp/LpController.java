@@ -1,7 +1,7 @@
-package br.com.victorbarberino.portfolio.lp;
+package br.com.victorbarberino.portfolio._domain.lp;
 
-import br.com.victorbarberino.portfolio.project.ProjectService;
-import br.com.victorbarberino.portfolio.testimonial.TestimonialService;
+import br.com.victorbarberino.portfolio._domain.project.ProjectService;
+import br.com.victorbarberino.portfolio._domain.testimonial.TestimonialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

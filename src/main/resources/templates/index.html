@@ -143,8 +143,8 @@
           <div class="project-info">
             <h3 class="project-title" th:text="${project.title}"></h3>
             <p th:text="${project.description}"></p>
-            <div class="skill-tags" th:each="tag : ${project.tags}">
-              <span class="skill-tag" th:text="${tag}"></span>
+            <div th:if="${!#lists.isEmpty(project.tags)}" class="skill-tags">
+              <span class="skill-tag" th:each="tag : ${project.tags}" th:text="${tag}"></span>
             </div>
           </div>
         </div>
@@ -206,7 +206,7 @@
 </section>
 
 <!-- Footer -->
-<footer class="footer">
+<footer class="footer bg-animated">
   <div class="container">
     <div class="footer-content">
       <p>&copy; <span id="current-year" th:text="${actualYear}"></span> Victor Barberino. Todos os direitos reservados.</p>

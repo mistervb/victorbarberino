@@ -1,0 +1,98 @@
+.topbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 250px; /* Mesmo tamanho do sidebar */
+    height: 60px;
+    background: linear-gradient(90deg, var(--dark-gray) 0%, var(--black) 100%);
+    backdrop-filter: var(--macos-blur);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 999;
+    transition: var(--transition);
+}
+
+.sidebar.collapsed + .main-content .topbar {
+    left: 70px;
+}
+
+.topbar-content {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+    padding: 0 1.5rem;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    width: 300px;
+}
+
+.search-box i {
+    color: var(--text-light);
+    margin-right: 0.5rem;
+}
+
+.search-box input {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    width: 100%;
+    outline: none;
+}
+
+.search-box input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.notifications {
+    position: relative;
+    cursor: pointer;
+}
+
+.notifications i {
+    font-size: 1.2rem;
+    color: var(--text-light);
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+}
+
+.user-profile img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-profile span {
+    color: var(--text-light);
+}
+
+@media (max-width: 768px) {
+    .topbar {
+        left: 0;
+    }
+
+    .search-box {
+        width: 200px;
+    }
+
+    .user-profile span {
+        display: none;
+    }
+}

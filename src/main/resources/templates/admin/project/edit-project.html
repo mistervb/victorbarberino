@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/fragments/head('VB Admin - Editar Projeto')}"></head>
+<link rel="stylesheet" th:href="@{/css/sidebar.css}">
+<link rel="stylesheet" th:href="@{/css/topbar.css}">
+<link rel="stylesheet" th:href="@{/css/new-project.css}">
+<body>
+    <div th:replace="~{/fragments/sidebar :: main_sidebar('projects')}"></div>
+    <div class="main-content p-0">
+        <nav th:replace="~{/fragments/topbar :: topbar}"></nav>
+        <div class="content-wrapper">
+            <div class="form-container">
+                <div class="form-header-flex">
+                    <a href="/admin/projects" class="back-link-ios">
+                        <i class="fas fa-chevron-left"></i> Projetos
+                    </a>
+                    <h1 class="form-title">
+                        <i class="fas fa-edit"></i>
+                        Editar Projeto
+                    </h1>
+                </div>
+                <form th:action="@{'/admin/projects/action/update/' + ${projectData.projectId}}" th:object="${projectData}" method="post">
+                    <div class="form-group">
+                        <label class="form-label" for="title">Título</label>
+                        <input type="text" class="form-control" id="title" th:field="*{title}" required>
+                        <span class="error-message" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="description">Descrição</label>
+                        <textarea class="form-control" id="description" th:field="*{description}" rows="4" required></textarea>
+                        <span class="error-message" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="image">URL da Imagem</label>
+                        <input type="url" class="form-control" id="image" th:field="*{image}" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="newTag">Tags</label>
+                        <input type="text" class="form-control" id="newTag" placeholder="Digite uma tag e pressione Enter">
+                        <!-- inputs de tags são criados dinamicamente pelo JS -->
+                        <div class="tag-container" id="tagContainer"></div>
+                    </div>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i>
+                        Salvar Alterações
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div th:if="${!#lists.isEmpty(notifications)}" th:each="notification : ${notifications}">
+        <div th:replace="~{fragments/notifications :: notifications(${notification.type.name().toLowerCase()}, ${notification.message})}"></div>
+    </div>
+    <script th:inline="javascript">
+        const tagInput = document.getElementById('newTag');
+        const tagContainer = document.getElementById('tagContainer');
+        let tags = /*[[${projectData.tags}]]*/ [];
+        if (Array.isArray(tags) && tags.length === 1 && typeof tags[0] === 'string' && tags[0].startsWith('[') && tags[0].endsWith(']')) {
+            try {
+                tags = JSON.parse(tags[0]);
+            } catch (e) {
+                tags = [];
+            }
+        }
+        function updateTags() {
+            tagContainer.innerHTML = '';
+            // Remover todos os campos tags antigos
+            document.querySelectorAll('input[name="tags"]').forEach(e => e.remove());
+            tags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.className = 'tag';
+                tagElement.innerHTML = `${tag} <i class="fas fa-times"></i>`;
+                tagElement.onclick = () => removeTag(tag);
+                tagContainer.appendChild(tagElement);
+                // Cria um campo hidden para cada tag
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'tags';
+                input.value = tag;
+                tagContainer.appendChild(input);
+            });
+        }
+        function addTag(tag) {
+            tag = tag.trim();
+            if (tag && !tags.includes(tag)) {
+                tags.push(tag);
+                updateTags();
+            }
+        }
+        function removeTag(tag) {
+            tags = tags.filter(t => t !== tag);
+            updateTags();
+        }
+        tagInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addTag(tagInput.value);
+                tagInput.value = '';
+            }
+        });
+        updateTags();
+    </script>
+</body>
+</html>

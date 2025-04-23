@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <nav th:fragment="topbar" class="topbar bg-gradient bg-black">
+        <div class="topbar-content">
+            <div class="topbar-right">
+                <div class="notifications">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div class="user-profile">
+                    <img th:src="@{/assets/me.png}" alt="User Avatar">
+                    <span>Usuário</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+</body>
+</html>
