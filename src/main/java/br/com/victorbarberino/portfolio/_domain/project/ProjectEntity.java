@@ -26,10 +26,17 @@ public class ProjectEntity {
     private String description;
 
     @Lob
-    @Column(nullable = false)
     private String image;
 
+    @Lob
+    private byte[] imageBytes;
+
+    private String imageContentType;
+
     private List<String> tags;
+
+    @Column(name = "was_uploaded", nullable = false)
+    private boolean wasUploaded = false;
 
     @Column(nullable = false, name = "created_at")
     private LocalDateTime createdAt;
@@ -42,8 +49,24 @@ public class ProjectEntity {
         this.createdAt = LocalDateTime.now();
     }
 
+    public ProjectEntity(ProjectData data, byte[] imageBytes, String imageContentType) {
+        this.title = data.getTitle();
+        this.description = data.getDescription();
+        this.image = data.getImage();
+        this.tags = data.getTags();
+        this.imageBytes = imageBytes;
+        this.imageContentType = imageContentType;
+        this.createdAt = LocalDateTime.now();
+    }
+
     public ProjectData convertToData() {
-        System.out.println(new ProjectData(this.id, this.title, this.description, this.image, this.tags).getTags());
-        return new ProjectData(this.id, this.title, this.description, this.image, this.tags);
+        ProjectData data = new ProjectData();
+        data.setProjectId(this.id);
+        data.setTitle(this.title);
+        data.setDescription(this.description);
+        data.setImage(this.image);
+        data.setTags(this.tags);
+        data.setWasUploaded(this.wasUploaded);
+        return data;
     }
 }

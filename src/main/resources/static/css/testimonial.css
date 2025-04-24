@@ -1,0 +1,115 @@
+/* Estilo para a tela de testemunhas, seguindo o design system do app */
+
+.testimonial-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.testimonial-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+
+.testimonial-card {
+  background: linear-gradient(120deg, #191a1b 70%, #232526 100%);
+  border-radius: 18px;
+  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
+  padding: 2.3rem 2rem 1.7rem 2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  min-width: 340px;
+  max-width: 540px;
+  width: 100%;
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.testimonial-avatar {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.12);
+  border: 3px solid #f6a700;
+  background: #232526;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.testimonial-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.testimonial-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.testimonial-quote {
+  font-size: 1.08rem;
+  color: #f6a700;
+  margin-bottom: 0.9rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+}
+
+.testimonial-quote i {
+  font-size: 1.3em;
+  color: #f6a700;
+  margin-top: 2px;
+}
+
+.testimonial-quote p {
+  color: var(--text-light, #fff);
+  font-size: 1.08rem;
+  font-style: italic;
+  margin: 0;
+}
+
+.testimonial-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.testimonial-name {
+  font-weight: 600;
+  color: #fff;
+  font-size: 1.07rem;
+}
+
+.testimonial-role {
+  color: #fed353;
+  font-size: 0.98rem;
+  font-weight: 400;
+}
+
+@media (max-width: 600px) {
+  .testimonial-card {
+    flex-direction: column;
+    align-items: center;
+    padding: 1.2rem 1rem;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .testimonial-avatar {
+    margin-bottom: 1rem;
+  }
+  .testimonial-content {
+    align-items: center;
+    text-align: center;
+  }
+}

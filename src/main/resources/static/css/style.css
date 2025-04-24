@@ -650,3 +650,7 @@ section {
       background-position: 40px 40px;
     }
 }
+
+.text-muted {
+    color: #969696 !important;
+}

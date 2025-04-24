@@ -19,7 +19,7 @@
                         Editar Projeto
                     </h1>
                 </div>
-                <form th:action="@{'/admin/projects/action/update/' + ${projectData.projectId}}" th:object="${projectData}" method="post">
+                <form th:action="@{'/admin/projects/action/update/' + ${projectData.projectId}}" th:object="${projectData}" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label class="form-label" for="title">Título</label>
                         <input type="text" class="form-control" id="title" th:field="*{title}" required>
@@ -31,8 +31,41 @@
                         <span class="error-message" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="image">URL da Imagem</label>
-                        <input type="url" class="form-control" id="image" th:field="*{image}" placeholder="https://...">
+                        <label class="form-label">Pré-visualização da Imagem Atual</label>
+                        <div th:if="${projectData.image != null}">
+                            <img th:src="${projectData.image}" alt="Imagem atual" style="max-width:200px; max-height:200px; display:block; margin-bottom:8px;">
+                        </div>
+                        <div th:if="${projectData.image == null}">
+                            <span style="color:#999">Nenhuma imagem cadastrada.</span>
+                        </div>
+                        <small class="form-text text-muted">
+                            Se não quiser alterar a imagem, apenas salve. Para trocar, selecione uma nova imagem ou informe uma nova URL.
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <div class="tab-image-choice">
+                            <button type="button" class="tab-btn active" id="tabUrlBtn">URL</button>
+                            <button type="button" class="tab-btn" id="tabFileBtn">Arquivo</button>
+                        </div>
+                        <div id="imageUrlInputHidden" th:style="${projectData.wasUploaded} ? '' : 'display:none'">
+                            <input type="hidden" id="imageHidden" th:field="*{image}" />
+                        </div>
+                        <div id="uploadMsg" th:style="${projectData.wasUploaded} ? '' : 'display:none'">
+                            <p class="text-muted" style="margin:8px 0;">
+                                Você fez upload dessa imagem.
+                                <a href="#" id="switchToUrlBtn" style="color:#f6a700; text-decoration:underline; cursor:pointer;">Clique aqui para trocar para uma URL</a>
+                                <a href="#" id="switchToFileBtn" style="color:#f6a700; text-decoration:underline; cursor:pointer;">Clique aqui para trocar de arquivo</a>
+                            </p>
+                        </div>
+                        <div id="imageUrlInputVisible" th:style="${projectData.wasUploaded} ? 'display:none' : ''">
+                            <label class="form-label" for="imageUrlField">URL da Imagem</label>
+                            <input type="url" class="form-control" id="imageUrlField" th:field="*{image}" placeholder="https://...">
+                        </div>
+                        <div id="imageFileInput" th:style="${projectData.wasUploaded} ? 'display:none' : ''">
+                            <label class="form-label" for="imageFile">Upload de Imagem</label>
+                            <input type="file" class="form-control" id="imageFile" name="imageFile" accept="image/*">
+                        </div>
+                        <input type="hidden" id="imageInputType" name="imageInputType" th:value="${projectData.image != null and #strings.startsWith(projectData.image, '/project/img?id=') ? 'file' : 'url'}">
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="newTag">Tags</label>
@@ -99,6 +132,161 @@
             }
         });
         updateTags();
+    </script>
+    <script th:inline="javascript">
+        // Valores padrões conforme wasUploaded
+        var wasUploaded = /*[[${projectData.wasUploaded}]]*/ false;
+        console.log(wasUploaded);
+        document.getElementById('imageInputType').value = wasUploaded ? 'file' : 'url';
+
+        // Tabs para escolha de imagem
+        const tabUrlBtn = document.getElementById('tabUrlBtn');
+        const tabFileBtn = document.getElementById('tabFileBtn');
+        const imageUrlInputHidden = document.getElementById('imageUrlInputHidden');
+        const imageUrlInputVisible = document.getElementById('imageUrlInputVisible');
+        const imageFileInput = document.getElementById('imageFileInput');
+        const imageUrlField = imageUrlInputVisible.querySelector('input[type="url"]');
+        const imageFileField = document.getElementById('imageFile');
+        const imageHiddenField = document.getElementById('imageHidden');
+        const form = imageUrlField.closest('form');
+        const switchToUrlBtn = document.getElementById('switchToUrlBtn');
+        const switchToFileBtn = document.getElementById('switchToFileBtn');
+
+        // Ativa a tab correta ao carregar
+        const initialInputType = document.getElementById('imageInputType').value;
+        if (initialInputType === 'file') {
+            tabFileBtn.classList.add('active');
+            tabUrlBtn.classList.remove('active');
+            imageUrlInputVisible.style.display = 'none';
+            imageUrlInputHidden.style.display = '';
+            
+            imageFileInput.style.display = wasUploaded ? 'none' : '';
+            switchToUrlBtn.style.display = wasUploaded ? 'none' : '';
+            switchToFileBtn.style.display = wasUploaded ? '' : 'none';
+            imageUrlField.disabled = true;
+            imageHiddenField.disabled = false;
+            imageFileField.required = !wasUploaded;
+        } else {
+            tabUrlBtn.classList.add('active');
+            tabFileBtn.classList.remove('active');
+            imageUrlInputHidden.style.display = 'none';
+            //imageUrlInputVisible.style.display = wasUploaded ? 'none' : 'block';
+            imageFileInput.style.display = 'none';
+            imageHiddenField.disabled = true;
+            imageUrlField.disabled = false;
+        }
+        tabUrlBtn.addEventListener('click', function() {
+            if(wasUploaded) {
+                switchToFileBtn.style.display = 'none';
+                switchToUrlBtn.style.display = '';
+            }
+            tabUrlBtn.classList.add('active');
+            tabFileBtn.classList.remove('active');
+
+            if(!wasUploaded) {
+                imageUrlInputHidden.style.display = 'none';
+                imageUrlInputVisible.style.display = '';
+                imageFileField.style.display = 'none';
+                imageFileInput.style.display = 'none';
+                document.getElementById('imageInputType').value = 'url';
+                // Limpa arquivo, torna URL required
+                if (imageFileField) imageFileField.value = '';
+                if (imageFileField) imageFileField.required = false;
+                if (imageUrlField) imageUrlField.required = true;
+                imageHiddenField.disabled = true;
+                imageUrlField.disabled = false;
+            }
+          
+        });
+        tabFileBtn.addEventListener('click', function() {
+            if(wasUploaded) {
+                switchToUrlBtn.style.display = 'none';
+                switchToFileBtn.style.display = '';
+            }
+            tabFileBtn.classList.add('active');
+            tabUrlBtn.classList.remove('active');
+
+            if(!wasUploaded) {
+                imageUrlInputHidden.style.display = '';
+                imageUrlInputVisible.style.display = 'none';
+                imageFileField.style.display = '';
+                imageFileInput.style.display = '';
+                document.getElementById('imageInputType').value = 'file';
+                // Limpa URL, torna arquivo required
+                if (imageUrlField) imageUrlField.value = '';
+                if (imageFileField) imageFileField.required = true;
+                if (imageUrlField) imageUrlField.required = false;
+                imageUrlField.disabled = true;
+                imageHiddenField.disabled = false;
+            }
+        });
+   
+        if (switchToUrlBtn) {
+            switchToUrlBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Esconde o input hidden e mostra o visível
+                if (imageUrlInputHidden) imageUrlInputHidden.style.display = 'none';
+                if (imageUrlInputVisible) imageUrlInputVisible.style.display = '';
+                if (imageUrlField) imageUrlField.value = '';
+                // Ativa a tab URL
+                tabUrlBtn.classList.add('active');
+                tabFileBtn.classList.remove('active');
+                imageFileInput.style.display = 'none';
+                document.getElementById('imageInputType').value = 'url';
+                // Esconde a mensagem de upload inteira
+                const uploadMsg = document.getElementById('uploadMsg');
+                if (uploadMsg) uploadMsg.style.display = 'none';
+                imageHiddenField.disabled = true;
+                imageUrlField.disabled = false;
+                wasUploaded = false;
+            });
+        }
+        if(switchToFileBtn) {
+            switchToFileBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                imageUrlInputHidden.style.display = '';
+                imageUrlInputVisible.style.display = 'none';
+                document.getElementById('imageInputType').value = 'file';
+                
+                // Limpa URL, torna arquivo required
+                if (imageUrlField) imageUrlField.value = '';
+                if (imageFileField) imageFileField.required = true;
+                if (imageUrlField) imageUrlField.required = false;
+
+                const uploadMsg = document.getElementById('uploadMsg');
+                if (uploadMsg) uploadMsg.style.display = 'none';
+
+                imageUrlField.disabled = true;
+                imageHiddenField.disabled = false;
+
+                imageFileField.style.display = '';
+                imageFileInput.style.display = '';
+
+                wasUploaded = false;
+            });
+        }
+        // Validação extra no submit
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                if (tabUrlBtn.classList.contains('active')) {
+                    // URL obrigatório
+                    if (!imageUrlField.value.trim()) {
+                        imageUrlField.focus();
+                        e.preventDefault();
+                    } 
+                } else if (tabFileBtn.classList.contains('active')) {
+                    if (!imageFileField.value && wasUploaded) {
+            // OK: já existe imagem salva, não precisa uploadar de novo
+            return;
+        }
+                    // Arquivo obrigatório
+                    if (!imageFileField.value) {
+                        imageFileField.focus();
+                        e.preventDefault();
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>

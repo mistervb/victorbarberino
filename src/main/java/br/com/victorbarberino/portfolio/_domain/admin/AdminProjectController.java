@@ -6,18 +6,19 @@ import br.com.victorbarberino.portfolio._domain.project.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.victorbarberino.portfolio._domain.project.ProjectData;
+import br.com.victorbarberino.portfolio._domain.project.ProjectEntity;
+import br.com.victorbarberino.portfolio._domain.project.ProjectRepository;
 import java.util.UUID;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin/projects")
@@ -57,27 +58,33 @@ public class AdminProjectController extends WebController {
 
     @PostMapping("/action/save")
     public ModelAndView saveProject(@ModelAttribute @Validated ProjectData projectData, BindingResult result, RedirectAttributes ra) {
+        if (!projectData.isImageValid()) {
+            result.rejectValue("image", null, "É necessário fornecer uma imagem (URL ou upload de arquivo).");
+        }
         if (result.hasErrors()) {
             ModelAndView mv = new ModelAndView("/admin/project/new-project");
-
-            StringBuilder errorMessages = new StringBuilder();
-            result.getFieldErrors().forEach(error -> errorMessages.append(error.getDefaultMessage()).append("<br/>"));
-
-            addNotification(NotificationType.error, errorMessages.toString());
             mv.addObject("projectData", projectData);
+            System.out.println("Deu erro aew");
+            if(result.getErrorCount() > 0) {
+                for(ObjectError error : result.getAllErrors()) {
+                    addNotification(NotificationType.error, error.getDefaultMessage());
+                }
+            } else {
+                addNotification(NotificationType.error, "Ocorreu um erro desconhecido ao salvar o projeto.");
+            }
+            
             return dispatchMv(mv);
         }
-
-        ModelAndView mv = new ModelAndView("redirect:/admin/projects");
-        if (projectService.saveProject(projectData) == null) {
-            mv = new ModelAndView("/admin/project/new-project");
-            addNotification(NotificationType.error, "Ocorreu um erro desconhecido durante o cadastro de projetos.");
+        try {
+            projectService.saveProject(projectData);
+        } catch (Exception e) {
+            ModelAndView mv = new ModelAndView("/admin/project/new-project");
             mv.addObject("projectData", projectData);
+            addNotification(NotificationType.error, e.getMessage());
             return dispatchMv(mv);
         }
-
         addNotification(NotificationType.success, "Operação realizada com sucesso!");
-        return dispatchMv(mv);
+        return dispatchMv(new ModelAndView("redirect:/admin/projects"));
     }
 
     @PostMapping("/action/update/{id}")
@@ -110,5 +117,24 @@ public class AdminProjectController extends WebController {
             addNotification(NotificationType.error, "Erro ao excluir projeto.");
         }
         return dispatchMv(new ModelAndView("redirect:/admin/projects"));
+    }
+}
+
+@RestController
+class ProjectImageController {
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @GetMapping("/project/img")
+    public ResponseEntity<byte[]> getProjectImage(@RequestParam(required = false, name = "id") UUID id) {
+        Optional<ProjectEntity> projectOpt = projectRepository.findById(id);
+        if (projectOpt.isEmpty() || projectOpt.get().getImageBytes() == null) {
+            return ResponseEntity.notFound().build();
+        }
+        ProjectEntity project = projectOpt.get();
+        String contentType = project.getImageContentType() != null ? project.getImageContentType() : "image/jpeg";
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(project.getImageBytes());
     }
 }

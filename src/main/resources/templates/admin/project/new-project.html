@@ -19,7 +19,7 @@
                         Novo Projeto
                     </h1>
                 </div>
-                <form th:action="@{/admin/projects/action/save}" th:object="${projectData}" method="post">
+                <form th:action="@{/admin/projects/action/save}" th:object="${projectData}" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label class="form-label" for="title">Título</label>
                         <input type="text" class="form-control" id="title" th:field="*{title}" required>
@@ -33,8 +33,19 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="image">URL da Imagem</label>
-                        <input type="url" class="form-control" id="image" th:field="*{image}" placeholder="https://...">
+                        <div class="tab-image-choice">
+                            <button type="button" class="tab-btn active" id="tabUrlBtn">URL</button>
+                            <button type="button" class="tab-btn" id="tabFileBtn">Arquivo</button>
+                        </div>
+                        <div id="imageUrlInput">
+                            <label class="form-label" for="image">URL da Imagem</label>
+                            <input type="url" class="form-control" id="image" th:field="*{image}" placeholder="https://...">
+                        </div>
+                        <div id="imageFileInput" style="display:none">
+                            <label class="form-label" for="imageFile">Upload de Imagem</label>
+                            <input type="file" class="form-control" id="imageFile" name="imageFile" accept="image/*">
+                        </div>
+                        <input type="hidden" id="imageInputType" name="imageInputType" value="url">
                     </div>
 
                     <div class="form-group">
@@ -111,6 +122,57 @@
         });
 
         updateTags();
+    </script>
+
+    <script>
+        // Tabs para escolha de imagem
+        const tabUrlBtn = document.getElementById('tabUrlBtn');
+        const tabFileBtn = document.getElementById('tabFileBtn');
+        const imageUrlInput = document.getElementById('imageUrlInput');
+        const imageFileInput = document.getElementById('imageFileInput');
+        const imageUrlField = document.getElementById('image');
+        const imageFileField = document.getElementById('imageFile');
+        const form = imageUrlField.closest('form');
+        tabUrlBtn.addEventListener('click', function() {
+            tabUrlBtn.classList.add('active');
+            tabFileBtn.classList.remove('active');
+            imageUrlInput.style.display = '';
+            imageFileInput.style.display = 'none';
+            document.getElementById('imageInputType').value = 'url';
+            // Limpa arquivo, torna URL required
+            if (imageFileField) imageFileField.value = '';
+            if (imageUrlField) imageUrlField.required = true;
+            if (imageFileField) imageFileField.required = false;
+        });
+        tabFileBtn.addEventListener('click', function() {
+            tabFileBtn.classList.add('active');
+            tabUrlBtn.classList.remove('active');
+            imageUrlInput.style.display = 'none';
+            imageFileInput.style.display = '';
+            document.getElementById('imageInputType').value = 'file';
+            // Limpa URL, torna arquivo required
+            if (imageUrlField) imageUrlField.value = '';
+            if (imageFileField) imageFileField.required = true;
+            if (imageUrlField) imageUrlField.required = false;
+        });
+        // Validação extra no submit
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                if (tabUrlBtn.classList.contains('active')) {
+                    // URL obrigatório
+                    if (!imageUrlField.value.trim()) {
+                        imageUrlField.focus();
+                        e.preventDefault();
+                    }
+                } else if (tabFileBtn.classList.contains('active')) {
+                    // Arquivo obrigatório
+                    if (!imageFileField.value) {
+                        imageFileField.focus();
+                        e.preventDefault();
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>

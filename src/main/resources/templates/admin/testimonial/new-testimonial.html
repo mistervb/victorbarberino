@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head th:replace="~{/fragments/head('VB Admin - Nova Testemunha')}"></head>
+<link rel="stylesheet" th:href="@{/css/new-project.css}">
+<link rel="stylesheet" th:href="@{/css/testimonial.css}">
+<link rel="stylesheet" th:href="@{/css/sidebar.css}">
+<link rel="stylesheet" th:href="@{/css/topbar.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<body>
+    <div class="container-admin">
+        <div th:replace="~{/fragments/sidebar :: main_sidebar('testimonials')}"></div>
+        <main class="main-content p-0">
+            <nav th:replace="~{/fragments/topbar :: topbar}"></nav>
+            <div class="content-wrapper">
+                <div class="form-container">
+                    <div class="form-header-flex">
+                        <a href="/admin/testimonials" class="back-link-ios">
+                            <i class="fas fa-chevron-left"></i> Depoimentos
+                        </a>
+                        <h1 class="form-title">
+                            <i class="fas fa-quote-right"></i>
+                            Nova Testemunha
+                        </h1>
+                    </div>
+                    <form th:action="@{/admin/testimonials/action/save}" th:object="${testimonialData}" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label class="form-label" for="name">Nome</label>
+                            <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Nome da pessoa" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="role">Cargo/Empresa</label>
+                            <input type="text" class="form-control" id="role" th:field="*{role}" placeholder="Cargo ou empresa" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="quote">Depoimento</label>
+                            <textarea class="form-control" id="quote" th:field="*{quote}" rows="4" placeholder="Digite o depoimento" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="avatar">Foto (opcional)</label>
+                            <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Salvar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

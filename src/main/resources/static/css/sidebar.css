@@ -98,12 +98,14 @@
 .nav-link {
     display: flex;
     align-items: center;
-    padding: 0.75rem 1rem;
+    padding: 0.75rem .5rem !important;
     color: var(--text-light);
     text-decoration: none;
     transition: var(--transition);
     border-radius: 8px;
     gap: 1rem;
+    background: transparent;
+    font-weight: 500;
 }
 
 .nav-link:hover {
@@ -114,6 +116,7 @@
 .nav-link.active {
     background: var(--orange);
     color: var(--text-dark);
+    padding: 0.75rem .5rem;
 }
 
 .nav-link.active > span,

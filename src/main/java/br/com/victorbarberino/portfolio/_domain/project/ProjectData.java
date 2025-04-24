@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.springframework.web.multipart.MultipartFile;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,10 +26,15 @@ public class ProjectData {
     @Size(min = 10, max = 500, message = "A descrição deve ter entre 10 e 500 caracteres")
     private String description;
 
-    @NotBlank(message = "A url da imagem é obrigatória.")
+    private transient MultipartFile imageFile;
+
     private String image;
 
     private List<String> tags = new ArrayList<>();
+
+    private String imageInputType;
+
+    private boolean wasUploaded;
 
     public void setTags(List<String> tags) {
         if (tags != null && tags.size() == 1 && "[]".equals(tags.get(0))) {
@@ -35,5 +42,12 @@ public class ProjectData {
         } else {
             this.tags = tags;
         }
+    }
+
+    // Validação customizada: garantir que pelo menos um dos campos de imagem está preenchido
+    public boolean isImageValid() {
+        boolean hasUrl = (image != null && !image.trim().isEmpty());
+        boolean hasFile = (imageFile != null && !imageFile.isEmpty());
+        return hasUrl || hasFile;
     }
 }
