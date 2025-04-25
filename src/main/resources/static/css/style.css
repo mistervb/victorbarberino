@@ -26,6 +26,86 @@ body {
     overflow-x: hidden;
 }
 
+.bg-orange {
+    background-color: var(--orange) !important;
+}
+
+.testimonials-container { 
+    display: flex; 
+    flex-wrap: nowrap; 
+    justify-content: flex-start; 
+    gap: 1rem; 
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 1rem;
+    cursor: grab;
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
+    user-select: none;
+}
+
+.testimonials-container.active {
+    cursor: grabbing;
+}
+
+.testimonials-container::-webkit-scrollbar { display: none; }
+.testimonials-container { -ms-overflow-style: none; scrollbar-width: none; }
+
+.testimonial-card { 
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    border-radius: 8px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+    padding: 1.5rem; 
+    text-align: center; 
+    max-width: 280px; 
+    transition: transform .3s ease, box-shadow .3s ease; 
+    opacity: 0;
+    animation: fadeInUp .6s forwards;
+}
+
+@keyframes fadeInUp { 
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    } to { 
+        opacity: 1; 
+        transform: translateY(0);
+    }
+}
+
+.testimonial-avatar { 
+    width: 80px; 
+    height: 80px; 
+    border-radius: 50%; 
+    overflow: hidden; 
+    margin: 0 auto 1rem; 
+}
+
+.testimonial-avatar img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover;
+ }
+
+.testimonial-quote { 
+    font-style: italic; 
+    margin-bottom: 1rem; 
+    color: var(--text-light); 
+}
+
+.testimonial-name { 
+    font-weight: bold; 
+    margin: 0; 
+    color: #cacaca; 
+}
+
+.testimonial-role { 
+    font-size: .9rem; 
+    color: var(--orange); 
+}
+
 .background-liped {
     width: 100%;
     height: 100%;
@@ -343,6 +423,38 @@ section {
     margin: 0;
 }
 
+.testimonial-carousel {
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+}
+
+.testimonial-carousel .carousel-btn {
+    opacity: 0;
+    width: 3rem;
+    height: 3rem;
+    background: rgba(255,255,255,0.2);
+    border: 2px solid var(--orange);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--orange);
+    font-size: 1.2rem;
+    transition: background var(--transition), transform var(--transition), opacity .4s ease;
+    z-index: 10;
+}
+
+.testimonial-carousel:hover .carousel-btn {
+    opacity: 1;
+}
+
+.carousel-btn:hover {
+    background: var(--orange);
+    color: var(--black);
+    transform: scale(1.1);
+}
+
 /* Contact Form Improvements */
 .contact-form {
     max-width: 600px;
@@ -499,6 +611,21 @@ section {
 
     .profile-placeholder i {
         font-size: 6rem;
+    }
+
+    .testimonials-container {
+        gap: 0.5rem;
+        padding: 0 1rem;
+    }
+    .testimonial-card {
+        flex: 0 0 90%;
+        max-width: 90%;
+        min-width: 90%;
+    }
+    .carousel-btn {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1rem;
     }
 }
 

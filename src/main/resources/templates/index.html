@@ -154,14 +154,22 @@
 </section>
 
 <!-- Testimonials Section -->
-<section id="depoimentos" class="background-liped section-padding bg-light">
+<section id="depoimentos" class="background-liped section-padding bg-dark">
   <div class="container">
-    <h2 class="section-title">Depoimentos</h2>
-    <div class="testimonials-slider" th:each="testimonial : ${testimonials}">
-      <div class="testimonial-card">
-        <p class="testimonial-text" th:text="${testimonial.text}"></p>
-        <p class="testimonial-author" th:text="${testimonial.author}"></p>
+    <h2 class="section-title text-center mb-5">Depoimentos</h2>
+    <div class="testimonial-carousel">
+      <button class="carousel-btn prev-btn position-absolute top-50 start-0 translate-middle-y"><i class="fas fa-chevron-left"></i></button>
+      <div class="testimonials-container">
+        <div class="testimonial-card" th:each="testimonial : ${testimonials}">
+          <div class="testimonial-avatar">
+            <img th:src="${testimonial.avatar}" th:alt="${testimonial.name}" />
+          </div>
+          <p class="testimonial-quote" th:text="${testimonial.quote}"></p>
+          <h3 class="testimonial-name" th:text="${testimonial.name}"></h3>
+          <p class="testimonial-role" th:text="${testimonial.role}"></p>
+        </div>
       </div>
+      <button class="carousel-btn next-btn position-absolute top-50 end-0 translate-middle-y"><i class="fas fa-chevron-right"></i></button>
     </div>
   </div>
 </section>
@@ -172,15 +180,15 @@
     <h2 class="section-title">Entre em Contato</h2>
     <div class="row justify-content-center">
       <div class="col-lg-6">
-        <form id="contact-form" class="contact-form">
+        <form id="contact-form" th:action="@{/admin/contacts}" method="post" class="contact-form">
           <div class="form-group">
-            <input type="text" class="form-control" placeholder="Seu Nome" required>
+            <input type="text" name="name" class="form-control" placeholder="Seu Nome" required>
           </div>
           <div class="form-group">
-            <input type="email" class="form-control" placeholder="Seu Email" required>
+            <input type="email" name="email" class="form-control" placeholder="Seu Email" required>
           </div>
           <div class="form-group">
-            <textarea class="form-control" placeholder="Sua Mensagem" rows="5" required></textarea>
+            <textarea name="message" class="form-control" placeholder="Sua Mensagem" rows="5" required></textarea>
           </div>
           <button type="submit" class="cta-button">Enviar Mensagem</button>
         </form>
@@ -205,6 +213,48 @@
   </div>
 </section>
 
+<!-- Success Modal -->
+<div class="modal fade" id="contactSuccessModal" tabindex="-1" aria-labelledby="contactSuccessModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="contactSuccessModalLabel">Mensagem Enviada</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+        <p>Sua mensagem foi enviada com sucesso!</p>
+        <div class="d-flex justify-content-around mt-3">
+          <a href="https://wa.me/SEU_NUMERO" target="_blank" class="btn btn-outline-light">
+            <i class="fab fa-whatsapp fa-2x"></i>
+          </a>
+          <a href="https://linkedin.com/in/SEU_PERFIL" target="_blank" class="btn btn-outline-light">
+            <i class="fab fa-linkedin fa-2x"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script th:inline="javascript">
+  document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = this;
+    const formData = new FormData(form);
+    fetch(form.action, {
+      method: 'POST',
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      body: formData
+    })
+    .then(response => {
+      if (response.ok) {
+        new bootstrap.Modal(document.getElementById('contactSuccessModal')).show();
+        form.reset();
+      }
+    });
+  });
+</script>
+
 <!-- Footer -->
 <footer class="footer bg-animated">
   <div class="container">
@@ -216,5 +266,72 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/main.js}"></script>
+<script>
+  const container = document.querySelector('.testimonials-container');
+  const prevBtn = document.querySelector('.prev-btn');
+  const nextBtn = document.querySelector('.next-btn');
+  if (container && prevBtn && nextBtn) {
+    // Initialize carousel
+    container.scrollLeft = 0;
+    const scrollAmount = container.offsetWidth;
+    const autoPlayInterval = 7000;
+    let autoPlay = setInterval(() => nextBtn.click(), autoPlayInterval);
+
+    const resetAutoPlay = () => {
+      clearInterval(autoPlay);
+      autoPlay = setInterval(() => nextBtn.click(), autoPlayInterval);
+    };
+
+    // Navigation buttons with wrap-around
+    prevBtn.addEventListener('click', () => {
+      if (container.scrollLeft <= 0) {
+        container.scrollTo({ left: container.scrollWidth - scrollAmount, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      }
+      resetAutoPlay();
+    });
+    nextBtn.addEventListener('click', () => {
+      if (container.scrollLeft + scrollAmount >= container.scrollWidth) {
+        container.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+      resetAutoPlay();
+    });
+
+    // Pause/resume autoplay on hover and touch
+    container.addEventListener('mouseenter', () => clearInterval(autoPlay));
+    container.addEventListener('mouseleave', resetAutoPlay);
+    container.addEventListener('touchstart', () => clearInterval(autoPlay));
+    container.addEventListener('touchend', resetAutoPlay);
+
+    // Drag support via pointer events
+    let isDown = false, startX = 0, scrollStart = 0;
+    container.addEventListener('pointerdown', e => {
+      isDown = true;
+      container.setPointerCapture(e.pointerId);
+      startX = e.clientX - container.getBoundingClientRect().left;
+      scrollStart = container.scrollLeft;
+      clearInterval(autoPlay);
+      container.classList.add('active');
+    });
+    container.addEventListener('pointermove', e => {
+      if (!isDown) return;
+      const x = e.clientX - container.getBoundingClientRect().left;
+      const walk = x - startX;
+      container.scrollLeft = scrollStart - walk;
+    });
+    const endDrag = e => {
+      isDown = false;
+      container.releasePointerCapture(e.pointerId);
+      container.classList.remove('active');
+      resetAutoPlay();
+    };
+    container.addEventListener('pointerup', endDrag);
+    container.addEventListener('pointerleave', endDrag);
+    container.addEventListener('pointercancel', endDrag);
+  }
+</script>
 </body>
 </html>

@@ -36,8 +36,19 @@
                             <textarea class="form-control" id="quote" th:field="*{quote}" rows="4" placeholder="Digite o depoimento" required></textarea>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="avatar">Foto (opcional)</label>
-                            <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+                            <div class="tab-image-choice">
+                                <button type="button" class="tab-btn active" id="tabAvatarUrlBtn">URL</button>
+                                <button type="button" class="tab-btn" id="tabAvatarFileBtn">Arquivo</button>
+                            </div>
+                            <div id="avatarUrlInput">
+                                <label class="form-label" for="avatar">URL da Foto</label>
+                                <input type="url" class="form-control" id="avatar" th:field="*{avatar}" placeholder="https://...">
+                            </div>
+                            <div id="avatarFileInput" style="display:none">
+                                <label class="form-label" for="avatarFile">Upload de Foto</label>
+                                <input type="file" class="form-control" id="avatarFile" name="avatarFile" accept="image/*">
+                            </div>
+                            <input type="hidden" id="avatarInputType" name="avatarInputType" value="url">
                         </div>
                         <button type="submit" class="btn-primary">
                             <i class="fas fa-save"></i> Salvar
@@ -47,5 +58,55 @@
             </div>
         </main>
     </div>
+    <script>
+        // Tabs para escolha de imagem do autor
+        const tabAvatarUrlBtn = document.getElementById('tabAvatarUrlBtn');
+        const tabAvatarFileBtn = document.getElementById('tabAvatarFileBtn');
+        const avatarUrlInput = document.getElementById('avatarUrlInput');
+        const avatarFileInputDiv = document.getElementById('avatarFileInput');
+        const avatarUrlField = document.getElementById('avatar');
+        const avatarFileField = document.getElementById('avatarFile');
+        const form = avatarUrlField.closest('form');
+        tabAvatarUrlBtn.addEventListener('click', function() {
+            tabAvatarUrlBtn.classList.add('active');
+            tabAvatarFileBtn.classList.remove('active');
+            avatarUrlInput.style.display = '';
+            avatarFileInputDiv.style.display = 'none';
+            document.getElementById('avatarInputType').value = 'url';
+            // Limpa arquivo, torna URL required
+            if (avatarFileField) avatarFileField.value = '';
+            if (avatarUrlField) avatarUrlField.required = true;
+            if (avatarFileField) avatarFileField.required = false;
+        });
+        tabAvatarFileBtn.addEventListener('click', function() {
+            tabAvatarFileBtn.classList.add('active');
+            tabAvatarUrlBtn.classList.remove('active');
+            avatarUrlInput.style.display = 'none';
+            avatarFileInputDiv.style.display = '';
+            document.getElementById('avatarInputType').value = 'file';
+            // Limpa URL, torna arquivo required
+            if (avatarUrlField) avatarUrlField.value = '';
+            if (avatarFileField) avatarFileField.required = true;
+            if (avatarUrlField) avatarUrlField.required = false;
+        });
+        // Validação extra no submit
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                if (tabAvatarUrlBtn.classList.contains('active')) {
+                    // URL obrigatório
+                    if (!avatarUrlField.value.trim()) {
+                        avatarUrlField.focus();
+                        e.preventDefault();
+                    }
+                } else if (tabAvatarFileBtn.classList.contains('active')) {
+                    // Arquivo obrigatório
+                    if (!avatarFileField.value) {
+                        avatarFileField.focus();
+                        e.preventDefault();
+                    }
+                }
+            });
+        }
+    </script>
 </body>
 </html>

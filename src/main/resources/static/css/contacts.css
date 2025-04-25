@@ -1,0 +1,41 @@
+/* contacts.css */
+/* Estilo dark seguindo design system macOS */
+.contacts-container {
+  padding: 16px;
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.filters input {
+  padding: 8px;
+  background-color: #2c2c2c;
+  border: 1px solid #3c3c3c;
+  border-radius: 4px;
+  color: #ffffff;
+}
+.table-responsive {
+  overflow-x: auto;
+}
+.contacts-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #2c2c2c;
+}
+.contacts-table th, .contacts-table td {
+  padding: 12px;
+  border-bottom: 1px solid #3c3c3c;
+}
+.contacts-table th {
+  text-align: left;
+  background-color: #3c3c3c;
+}
+.contacts-table tbody tr:nth-child(even) {
+  background-color: #282828;
+}
+.contacts-table tbody tr:hover {
+  background-color: #454545;
+}

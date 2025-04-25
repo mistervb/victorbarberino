@@ -36,8 +36,41 @@
                             <textarea class="form-control" id="quote" th:field="*{quote}" rows="4" placeholder="Digite o depoimento" required></textarea>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="avatar">Foto (opcional)</label>
-                            <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+                            <label class="form-label">Pré-visualização da Foto Atual</label>
+                            <div th:if="${testimonialData.avatar != null}">
+                                <img th:src="${testimonialData.avatar}" alt="Foto atual" style="max-width:120px; max-height:120px; display:block; margin-bottom:8px;">
+                            </div>
+                            <div th:if="${testimonialData.avatar == null}">
+                                <span style="color:#999">Nenhuma foto cadastrada.</span>
+                            </div>
+                            <small class="form-text text-muted">
+                                Se não quiser alterar a foto, apenas salve. Para trocar, selecione uma nova foto ou informe uma nova URL.
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <div class="tab-image-choice">
+                                <button type="button" class="tab-btn active" id="tabAvatarUrlBtn">URL</button>
+                                <button type="button" class="tab-btn" id="tabAvatarFileBtn">Arquivo</button>
+                            </div>
+                            <div id="avatarUrlInputHidden" th:style="${testimonialData.wasUploaded} ? '' : 'display:none'">
+                                <input type="hidden" id="avatarHidden" th:field="*{avatar}" />
+                            </div>
+                            <div id="uploadAvatarMsg" th:style="${testimonialData.wasUploaded} ? '' : 'display:none'">
+                                <p class="text-muted" style="margin:8px 0;">
+                                    Você fez upload dessa foto.
+                                    <a href="#" id="switchToAvatarUrlBtn" style="color:#f6a700; text-decoration:underline; cursor:pointer;">Clique aqui para trocar para uma URL</a>
+                                    <a href="#" id="switchToAvatarFileBtn" style="color:#f6a700; text-decoration:underline; cursor:pointer;">Clique aqui para trocar de arquivo</a>
+                                </p>
+                            </div>
+                            <div id="avatarUrlInputVisible" th:style="${testimonialData.wasUploaded} ? 'display:none' : ''">
+                                <label class="form-label" for="avatarUrlField">URL da Foto</label>
+                                <input type="url" class="form-control" id="avatarUrlField" th:field="*{avatar}" placeholder="https://..." th:required="${!testimonialData.wasUploaded}" th:disabled="${testimonialData.wasUploaded}">
+                            </div>
+                            <div id="avatarFileField" style="display:none;">
+                                <label class="form-label" for="avatarFileInput">Selecione uma foto</label>
+                                <input type="file" class="form-control" id="avatarFileInput" name="avatarFile" accept="image/*">
+                            </div>
+                            <input type="hidden" id="avatarInputType" name="avatarInputType" th:value="${testimonialData.avatar != null and #strings.startsWith(testimonialData.avatar, '/testimonial/img?id=') ? 'file' : 'url'}">
                         </div>
                         <button type="submit" class="btn-primary">
                             <i class="fas fa-save"></i> Salvar alterações
@@ -47,5 +80,137 @@
             </div>
         </main>
     </div>
+    <script th:inline="javascript">
+        var wasUploaded = /*[[${testimonialData.wasUploaded}]]*/ false;
+        document.getElementById('avatarInputType').value = wasUploaded ? 'file' : 'url';
+        const tabAvatarUrlBtn = document.getElementById('tabAvatarUrlBtn');
+        const tabAvatarFileBtn = document.getElementById('tabAvatarFileBtn');
+        const avatarUrlInputHidden = document.getElementById('avatarUrlInputHidden');
+        const avatarUrlInputVisible = document.getElementById('avatarUrlInputVisible');
+        const avatarFileField = document.getElementById('avatarFileField');
+        const avatarFileInput = document.getElementById('avatarFileInput');
+        const avatarUrlField = document.getElementById('avatarUrlField');
+        const avatarHiddenField = document.getElementById('avatarHidden');
+        const switchToAvatarUrlBtn = document.getElementById('switchToAvatarUrlBtn');
+        const switchToAvatarFileBtn = document.getElementById('switchToAvatarFileBtn');
+        const form = document.querySelector('form');
+
+        // Ativa a tab correta ao carregar
+        const initialInputType = document.getElementById('avatarInputType').value;
+        if (initialInputType === 'file') {
+            tabAvatarFileBtn.classList.add('active');
+            tabAvatarUrlBtn.classList.remove('active');
+            avatarUrlInputHidden.style.display = '';
+            avatarUrlInputVisible.style.display = 'none';
+            avatarFileField.style.display = '';
+            avatarFileInput.style.display = wasUploaded ? 'none' : '';
+            // mostrar ou ocultar links de troca conforme upload
+            switchToAvatarUrlBtn.style.display = wasUploaded ? 'none' : '';
+            switchToAvatarFileBtn.style.display = wasUploaded ? '' : 'none';
+            avatarFileInput.required = !wasUploaded;
+            avatarUrlField.disabled = true;
+            avatarHiddenField.disabled = false;
+        } else {
+            tabAvatarUrlBtn.classList.add('active');
+            tabAvatarFileBtn.classList.remove('active');
+            avatarUrlInputHidden.style.display = 'none';
+            avatarUrlInputVisible.style.display = '';
+            avatarFileField.style.display = 'none';
+            avatarFileInput.style.display = 'none';
+            avatarUrlField.disabled = false;
+            avatarHiddenField.disabled = true;
+        }
+
+        tabAvatarUrlBtn.addEventListener('click', function() {
+            if(wasUploaded) {
+                switchToAvatarFileBtn.style.display = 'none';
+                switchToAvatarUrlBtn.style.display = '';
+            }
+            tabAvatarUrlBtn.classList.add('active');
+            tabAvatarFileBtn.classList.remove('active');
+
+            if(!wasUploaded) {
+                avatarUrlInputHidden.style.display = 'none';
+                avatarUrlInputVisible.style.display = '';
+                avatarFileField.style.display = 'none';
+                avatarFileInput.style.display = 'none';
+                document.getElementById('avatarInputType').value = 'url';
+                avatarUrlField.disabled = false;
+                avatarHiddenField.disabled = true;
+            }
+        });
+        tabAvatarFileBtn.addEventListener('click', function() {
+            if(wasUploaded) {
+                switchToAvatarFileBtn.style.display = '';
+                switchToAvatarUrlBtn.style.display = 'none';
+            }
+            tabAvatarFileBtn.classList.add('active');
+            tabAvatarUrlBtn.classList.remove('active');
+            
+            if(!wasUploaded) {
+                avatarUrlInputHidden.style.display = '';
+                avatarUrlInputVisible.style.display = 'none';
+                avatarFileField.style.display = '';
+                avatarFileInput.style.display = '';
+                document.getElementById('avatarInputType').value = 'file';
+                avatarUrlField.disabled = true;
+                avatarHiddenField.disabled = false;
+            }
+        
+        });
+        if (switchToAvatarUrlBtn) {
+            switchToAvatarUrlBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                avatarUrlInputHidden.style.display = 'none';
+                avatarUrlInputVisible.style.display = '';
+                avatarUrlField.value = '';
+                tabAvatarUrlBtn.classList.add('active');
+                tabAvatarFileBtn.classList.remove('active');
+                avatarFileInput.style.display = 'none';
+                document.getElementById('avatarInputType').value = 'url';
+                const uploadAvatarMsg = document.getElementById('uploadAvatarMsg');
+                if (uploadAvatarMsg) uploadAvatarMsg.style.display = 'none';
+                avatarHiddenField.disabled = true;
+                avatarUrlField.disabled = false;
+                wasUploaded = false;
+            });
+        }
+        if (switchToAvatarFileBtn) {
+            switchToAvatarFileBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                avatarUrlInputHidden.style.display = '';
+                avatarUrlInputVisible.style.display = 'none';
+                document.getElementById('avatarInputType').value = 'file';
+                avatarUrlField.value = '';
+                avatarFileInput.required = true;
+                avatarUrlField.required = false;
+                const uploadAvatarMsg = document.getElementById('uploadAvatarMsg');
+                if (uploadAvatarMsg) uploadAvatarMsg.style.display = 'none';
+                avatarUrlField.disabled = true;
+                avatarHiddenField.disabled = false;
+                avatarFileField.style.display = '';
+                avatarFileInput.style.display = '';
+                wasUploaded = false;
+            });
+        }
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                if (tabAvatarUrlBtn.classList.contains('active')) {
+                    if (!avatarUrlField.value.trim()) {
+                        avatarUrlField.focus();
+                        e.preventDefault();
+                    }
+                } else if (tabAvatarFileBtn.classList.contains('active')) {
+                    if (!avatarFileInput.value && wasUploaded) {
+                        return;
+                    }
+                    if (!avatarFileInput.value) {
+                        avatarFileInput.focus();
+                        e.preventDefault();
+                    }
+                }
+            });
+        }
+    </script>
 </body>
 </html>

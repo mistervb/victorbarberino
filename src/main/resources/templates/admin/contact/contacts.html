@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/fragments/head('VB Admin - Contacts')}"></head>
+<link rel="stylesheet" th:href="@{/css/sidebar.css}">
+<link rel="stylesheet" th:href="@{/css/topbar.css}">
+<link rel="stylesheet" th:href="@{/css/contacts.css}">
+<body>
+<div th:replace="~{/fragments/sidebar :: main_sidebar('contacts')}"></div>
+<div class="main-content p-0">
+  <nav th:replace="~{/fragments/topbar :: topbar}"></nav>
+  <div class="content-wrapper">
+    <div class="contacts-container">
+      <div class="filters">
+        <input type="text" id="nameFilter" placeholder="Filtrar por nome" />
+        <input type="date" id="dateFilter" placeholder="Filtrar por data" />
+      </div>
+      <div class="table-responsive">
+        <table class="contacts-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Mensagem</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="contact : ${contacts}">
+              <td th:text="${contact.name}"></td>
+              <td th:text="${contact.email}"></td>
+              <td th:text="${contact.message}"></td>
+              <td th:text="${contact.createdAt.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm'))}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      document.getElementById('nameFilter').addEventListener('input', function() {
+        const filter = this.value.toLowerCase();
+        document.querySelectorAll('.contacts-table tbody tr').forEach(function(row) {
+          const name = row.querySelector('td:first-child').textContent.toLowerCase();
+          row.style.display = name.includes(filter) ? '' : 'none';
+        });
+      });
+      document.getElementById('dateFilter').addEventListener('change', function() {
+        const filterDate = this.value;
+        document.querySelectorAll('.contacts-table tbody tr').forEach(function(row) {
+          const dateText = row.querySelector('td:last-child').textContent;
+          const parts = dateText.split(' ')[0].split('/');
+          const rowDate = parts[2] + '-' + parts[1] + '-' + parts[0];
+          row.style.display = rowDate === filterDate ? '' : 'none';
+        });
+      });
+      /*]]>*/
+    </script>
+  </div>
+</div>
+</body>
+</html>

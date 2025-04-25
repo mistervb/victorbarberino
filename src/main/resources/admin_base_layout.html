@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/fragments/head('nome')}"></head>
+<link rel="stylesheet" th:href="@{/css/sidebar.css}">
+<link rel="stylesheet" th:href="@{/css/topbar.css}">
+<body>
+  <div th:replace="~{/fragments/sidebar :: main_sidebar('nome')}"></div>
+  <div class="main-content p-0">
+    <nav th:replace="~{/fragments/topbar :: topbar}"></nav>
+    <div class="content-wrapper">
+      <!-- Conteúdo da página... -->
+    </div>
+  </div>
+</body>
+</html>
