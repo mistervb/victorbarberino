@@ -838,3 +838,63 @@ section {
 .text-muted {
     color: #969696 !important;
 }
+
+/* Apple-style Success Modal */
+.apple-modal .modal-content {
+  background: rgba(30, 30, 30, 0.95) !important;
+  border-radius: 1.5rem !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.28);
+  border: none;
+  padding-top: 2.5rem;
+  padding-bottom: 2rem;
+}
+.apple-success-icon {
+  z-index: 2;
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, #222 60%, #333 100%);
+  border-radius: 50%;
+  box-shadow: 0 4px 16px rgba(76,217,100,0.12);
+  top: -36px;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+.apple-modal .modal-header {
+  border-bottom: none;
+  padding-top: 2.5rem;
+  padding-bottom: 0.5rem;
+  background: transparent;
+}
+.apple-modal .modal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+.apple-modal .modal-body {
+  background: transparent;
+  color: #bdbdbd;
+  font-size: 1.1rem;
+}
+.apple-modal .btn-close {
+  filter: invert(1) grayscale(1);
+}
+.apple-modal .btn-outline-light {
+  border-radius: 999px;
+  border-width: 2px;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+.apple-modal .btn-outline-light:hover {
+  background: #4cd964;
+  color: #232323;
+  border-color: #4cd964;
+}
+@media (max-width: 600px) {
+  .apple-modal .modal-content {
+    padding: 2rem 0.5rem 1.5rem 0.5rem;
+  }
+  .apple-modal .modal-title {
+    font-size: 1.15rem;
+  }
+}
