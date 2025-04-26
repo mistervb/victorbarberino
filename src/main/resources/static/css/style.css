@@ -30,6 +30,10 @@ body {
     background-color: var(--orange) !important;
 }
 
+.txt-orange {
+    color: var(--orange) !important;
+}
+
 .testimonials-container { 
     display: flex; 
     flex-wrap: nowrap; 
@@ -587,6 +591,18 @@ section {
     .hero-buttons .cta-button {
         width: 100%;
         text-align: center;
+    }
+
+    .content-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        min-height: 80vh;
+        width: 100vw;
+        margin: 0 auto;
+        box-sizing: border-box;
     }
 }
 

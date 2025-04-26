@@ -15,24 +15,26 @@
         <input type="date" id="dateFilter" placeholder="Filtrar por data" />
       </div>
       <div class="table-responsive">
-        <table class="contacts-table">
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Email</th>
-              <th>Mensagem</th>
-              <th>Data</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr th:each="contact : ${contacts}">
-              <td th:text="${contact.name}"></td>
-              <td th:text="${contact.email}"></td>
-              <td th:text="${contact.message}"></td>
-              <td th:text="${contact.createdAt.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm'))}"></td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="contacts-table-wrapper">
+          <table class="contacts-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Mensagem</th>
+                <th>Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="contact : ${contacts}">
+                <td th:text="${contact.name}"></td>
+                <td th:text="${contact.email}"></td>
+                <td th:text="${contact.message}"></td>
+                <td th:text="${contact.createdAt.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm'))}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     <script th:inline="javascript">

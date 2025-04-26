@@ -17,10 +17,27 @@
 
 .topbar-content {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
-    height: 100%;
-    padding: 0 1.5rem;
+    justify-content: flex-end;
+    width: 100%;
+    position: relative;
+}
+
+/* Botão hamburguer só aparece em mobile */
+.mobile-sidebar-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: var(--text-light, #fff);
+    font-size: 1.7rem;
+    margin-left: 0.5rem;
+    margin-right: 0;
+    cursor: pointer;
+    z-index: 2100;
+    position: static;
+    left: unset;
+    top: unset;
+    transform: none;
 }
 
 .search-box {
@@ -83,16 +100,154 @@
     color: var(--text-light);
 }
 
+.topbar-animated-text {
+    display: flex;
+    align-items: center;
+    position: relative;
+    min-width: 220px;
+    height: 56px;
+    overflow: hidden;
+    margin-right: 2rem;
+}
+
+/* Disable transitions during reset to avoid downward slide */
+.topbar-animated-text.disable-transition .animated-text-item {
+    transition: none !important;
+}
+
+.animated-text-item {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    text-align: left;
+    font-size: .9rem;
+    font-weight: lighter;
+    background: linear-gradient(90deg, var(--orange) 30%, #fffbe7 50%, var(--orange) 70%);
+    background-size: 200% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0;
+    transform: translateY(100%);
+    display: flex;
+    align-items: center;
+    height: 56px;
+    top: 0;
+    /* remove transition: CSS keyframes handle all movement */
+}
+
+.animated-text-item {
+    opacity: 0;
+    transform: translateY(100%);
+    /* transitions removed; keyframes handle movement */
+}
+
+.animated-text-item.active {
+    /* slide-in, shine, pause, slide-out */
+    animation: slideShine 6s ease-in-out forwards;
+}
+
+@keyframes slideShine {
+    /* 0-20%: slide-in, 20-30% shine, extended pause, slide-out */
+    0%   { transform: translateY(100%); opacity: 1; background-position: 0% 50%; }
+    20%  { transform: translateY(0);    opacity: 1; background-position: 0% 50%; }
+    30%  { transform: translateY(0);    opacity: 1; background-position: 100% 50%; }
+    80%  { transform: translateY(0);    opacity: 1; background-position: 100% 50%; }
+    90%  { transform: translateY(-100%); opacity: 0; background-position: 100% 50%; }
+    100% { transform: translateY(-100%); opacity: 0; background-position: 100% 50%; }
+}
+
+.animated-text-item.prev {
+    opacity: 0;
+    transform: translateY(-100%);
+    z-index: 1;
+}
+
 @media (max-width: 768px) {
     .topbar {
-        left: 0;
+        width: 100vw !important;
+        left: 0 !important;
+        margin: 0 !important;
+        border-radius: 0;
+        height: 56px;
+        min-height: 56px;
+        line-height: 56px;
     }
-
+    .topbar-content {
+        height: 56px;
+        min-height: 56px;
+        display: flex;
+        align-items: center !important;
+        flex-direction: row;
+        justify-content: flex-end;
+        width: 100%;
+        position: relative;
+    }
+    .topbar-right {
+        display: flex;
+        align-items: center;
+        height: 56px;
+    }
+    .mobile-sidebar-btn {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        margin-right: auto;
+        margin-left: 0.5rem;
+        order: -1;
+        height: 40px;
+    }
     .search-box {
         width: 200px;
     }
 
     .user-profile span {
         display: none;
+    }
+
+    .content-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        min-height: 80vh;
+        width: 100vw;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+    .topbar-animated-text {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translateX(-50%);
+        margin-right: 0;
+        min-width: 180px;
+        height: 56px;
+        justify-content: center;
+        z-index: 2;
+    }
+    .topbar-content {
+        justify-content: flex-end;
+    }
+}
+
+@media (min-width: 769px) {
+    .topbar-content {
+        justify-content: flex-end;
+    }
+    .topbar-animated-text {
+        margin-right: auto;
+        margin-left: 0;
+        padding-left: 2rem;
+        justify-content: flex-start;
+        left: 0;
+        position: relative;
+        transform: none;
+    }
+    /* Garante espaçamento da sidebar */
+    nav.topbar {
+        padding-left: 30px;
     }
 }

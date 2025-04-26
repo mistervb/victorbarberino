@@ -3,7 +3,7 @@
 <body>
     <aside th:fragment="main_sidebar(activeLink)" class="sidebar">
         <div class="sidebar-header bg-gradient bg-black">
-            <a href="/" class="brand text-white">VB <code class="text-warning">Admin</code></a>
+            <a class="brand text-white">VB <code class="text-warning">Admin</code></a>
             <button id="toggleSidebar" class="toggle-btn">
                 <i class="fas fa-chevron-left toggle-icon"></i>
             </button>
@@ -40,15 +40,13 @@
             }
     
             toggleBtn.addEventListener('click', function() {
-                sidebar.classList.toggle('collapsed');
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.toggle('show');
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                }
                 updateToggleIcon();
             });
-    
-            // Para mobile
-            if (window.innerWidth <= 768) {
-                sidebar.classList.add('collapsed');
-                updateToggleIcon();
-            }
         </script>
     </aside>
 </body>

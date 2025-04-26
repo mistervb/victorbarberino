@@ -144,6 +144,14 @@
     width: auto;
 }
 
+/* Ocultar o code 'Admin' e centralizar a marca quando colapsado */
+.sidebar.collapsed .sidebar-header {
+    justify-content: center;
+}
+.sidebar.collapsed .sidebar-header .brand code {
+    display: none;
+}
+
 /* Scrollbar styling */
 .sidebar-content::-webkit-scrollbar {
     width: 4px;
@@ -178,17 +186,33 @@
 @media (max-width: 768px) {
     .sidebar {
         transform: translateX(-100%);
+        width: 90vw;
     }
-
     .sidebar.show {
         transform: translateX(0);
+        width: 90vw;
     }
-
+    .toggle-btn {
+        position: fixed;
+        left: 8px;
+        top: 12px;
+        z-index: 2001;
+        background: var(--dark-gray);
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
     .main-content {
-        margin-left: 0;
+        margin-left: 0 !important;
     }
-
-    .sidebar.show + .main-content {
-        margin-left: 250px;
+    .content-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        min-height: 80vh;
+        width: 100vw;
+        margin: 0 auto;
+        box-sizing: border-box;
     }
 }

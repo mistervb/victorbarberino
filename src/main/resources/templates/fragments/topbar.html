@@ -3,15 +3,79 @@
 <body>
     <nav th:fragment="topbar" class="topbar bg-gradient bg-black">
         <div class="topbar-content">
-            <div class="topbar-right">
-                <div class="notifications">
-                    <i class="fas fa-bell"></i>
-                </div>
-                <div class="user-profile">
-                    <img th:src="@{/assets/me.png}" alt="User Avatar">
+            <div class="topbar-animated-text">
+                <div class="animated-text-inner">
+                    <span class="animated-text-item">VB Admin v1.0.0</span>
+                    <span class="animated-text-item">Feito com amor e muito café</span>
                 </div>
             </div>
+            <button onclick="openSidebarMobile()" class="mobile-sidebar-btn d-md-none" id="openSidebarBtn" aria-label="Abrir menu" style="display:none">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="topbar-right">
+                <div class="notifications d-none">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div class="user-profile d-none">
+                    <img th:src="@{/assets/me.png}" alt="User Avatar">
+                </div>
+                <a th:href="@{/}" class="cta-button txt-orange">Portfolio</a>
+            </div>
         </div>
+        <script>
+            function updateMobileSidebarBtn() {
+                var btn = document.getElementById('openSidebarBtn');
+                var sidebar = document.querySelector('.sidebar');
+                if (!btn || !sidebar) return;
+                if (window.innerWidth <= 768) {
+                    btn.style.display = sidebar.classList.contains('show') ? 'none' : 'inline-flex';
+                } else {
+                    btn.style.display = 'none';
+                }
+            }
+            function openSidebarMobile() {
+                var sidebar = document.querySelector('.sidebar');
+                if (sidebar && !sidebar.classList.contains('show')) {
+                    sidebar.classList.add('show');
+                    updateMobileSidebarBtn();
+                }
+            }
+            window.addEventListener('resize', updateMobileSidebarBtn);
+            document.addEventListener('DOMContentLoaded', function() {
+                updateMobileSidebarBtn();
+                var btn = document.getElementById('openSidebarBtn');
+                if (btn) {
+                    btn.onclick = openSidebarMobile;
+                }
+                var toggleBtn = document.getElementById('toggleSidebar');
+                if (toggleBtn) {
+                    toggleBtn.addEventListener('click', function() {
+                        var sidebar = document.querySelector('.sidebar');
+                        if (window.innerWidth <= 768 && sidebar) {
+                            sidebar.classList.remove('show');
+                            updateMobileSidebarBtn();
+                        }
+                    });
+                }
+                var sidebar = document.querySelector('.sidebar');
+                if (sidebar) {
+                    sidebar.addEventListener('transitionend', updateMobileSidebarBtn);
+                }
+                // Animated text loop
+                var textItems = document.querySelectorAll('.topbar-animated-text .animated-text-item');
+                var currentTextIndex = 0;
+                function animateTopbarText() {
+                    textItems.forEach(function(item) { item.classList.remove('active'); });
+                    var current = textItems[currentTextIndex];
+                    if (current) { current.classList.add('active'); }
+                    currentTextIndex = (currentTextIndex + 1) % textItems.length;
+                }
+                if (textItems.length) {
+                    animateTopbarText();
+                    setInterval(animateTopbarText, 6000);
+                }
+            });
+        </script>
     </nav>
 </body>
 </html>

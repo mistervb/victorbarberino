@@ -20,6 +20,9 @@
 .table-responsive {
   overflow-x: auto;
 }
+.contacts-table-wrapper {
+  width: 100%;
+}
 .contacts-table {
   width: 100%;
   border-collapse: collapse;
@@ -38,4 +41,21 @@
 }
 .contacts-table tbody tr:hover {
   background-color: #454545;
+}
+
+@media (max-width: 768px) {
+  .contacts-table-wrapper {
+    width: 100vw;
+    overflow-x: auto;
+    margin: 0 -16px;
+    padding: 0 8px;
+  }
+  .contacts-table {
+    min-width: 600px;
+    font-size: 0.95rem;
+  }
+  .contacts-table th, .contacts-table td {
+    padding: 8px 6px;
+    white-space: nowrap;
+  }
 }
