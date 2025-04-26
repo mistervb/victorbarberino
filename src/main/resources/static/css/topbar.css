@@ -2,7 +2,7 @@
     position: fixed;
     top: 0;
     right: 0;
-    left: 250px; /* Mesmo tamanho do sidebar */
+    left: 250px;
     height: 60px;
     background: linear-gradient(90deg, var(--dark-gray) 0%, var(--black) 100%);
     backdrop-filter: var(--macos-blur);
@@ -23,7 +23,6 @@
     position: relative;
 }
 
-/* Botão hamburguer só aparece em mobile */
 .mobile-sidebar-btn {
     display: none;
     background: transparent;
@@ -110,7 +109,6 @@
     margin-right: 2rem;
 }
 
-/* Disable transitions during reset to avoid downward slide */
 .topbar-animated-text.disable-transition .animated-text-item {
     transition: none !important;
 }
@@ -134,22 +132,18 @@
     align-items: center;
     height: 56px;
     top: 0;
-    /* remove transition: CSS keyframes handle all movement */
 }
 
 .animated-text-item {
     opacity: 0;
     transform: translateY(100%);
-    /* transitions removed; keyframes handle movement */
 }
 
 .animated-text-item.active {
-    /* slide-in, shine, pause, slide-out */
     animation: slideShine 6s ease-in-out forwards;
 }
 
 @keyframes slideShine {
-    /* 0-20%: slide-in, 20-30% shine, extended pause, slide-out */
     0%   { transform: translateY(100%); opacity: 1; background-position: 0% 50%; }
     20%  { transform: translateY(0);    opacity: 1; background-position: 0% 50%; }
     30%  { transform: translateY(0);    opacity: 1; background-position: 100% 50%; }
