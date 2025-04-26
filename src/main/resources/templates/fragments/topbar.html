@@ -3,23 +3,29 @@
 <body>
     <nav th:fragment="topbar" class="topbar bg-gradient bg-black">
         <div class="topbar-content">
-            <div class="topbar-animated-text">
-                <div class="animated-text-inner">
-                    <span class="animated-text-item">VB Admin v1.0.0</span>
-                    <span class="animated-text-item">Feito com amor e muito café</span>
+            <div class="topbar-section left">
+                <button onclick="openSidebarMobile()" class="mobile-sidebar-btn d-md-none" id="openSidebarBtn" aria-label="Abrir menu" style="display:none">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="topbar-section center">
+                <div class="topbar-animated-text">
+                    <div class="animated-text-inner">
+                        <span class="animated-text-item">VB Web v0.0.1</span>
+                        <span class="animated-text-item">Feito com amor e muito café</span>
+                    </div>
                 </div>
             </div>
-            <button onclick="openSidebarMobile()" class="mobile-sidebar-btn d-md-none" id="openSidebarBtn" aria-label="Abrir menu" style="display:none">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="topbar-right">
-                <div class="notifications d-none">
-                    <i class="fas fa-bell"></i>
+            <div class="topbar-section right">
+                <div class="topbar-right">
+                    <div class="notifications d-none">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="user-profile d-none d-sm-flex">
+                        <img th:src="@{/assets/me.png}" alt="User Avatar">
+                    </div>
+                    <a th:href="@{/}" target="_blank" class="cta-button txt-orange">Portfolio</a>
                 </div>
-                <div class="user-profile d-none">
-                    <img th:src="@{/assets/me.png}" alt="User Avatar">
-                </div>
-                <a th:href="@{/}" class="cta-button txt-orange">Portfolio</a>
             </div>
         </div>
         <script>

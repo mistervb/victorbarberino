@@ -273,30 +273,24 @@
   if (container && prevBtn && nextBtn) {
     // Initialize carousel
     container.scrollLeft = 0;
-    const scrollAmount = container.offsetWidth;
+    // Calcula o tamanho real do card + gap
+    const card = container.querySelector('.testimonial-card');
+    const gap = parseInt(getComputedStyle(container).gap) || 16;
+    const cardWidth = card ? card.offsetWidth + gap : container.offsetWidth;
     const autoPlayInterval = 7000;
     let autoPlay = setInterval(() => nextBtn.click(), autoPlayInterval);
 
-    const resetAutoPlay = () => {
+    function resetAutoPlay() {
       clearInterval(autoPlay);
       autoPlay = setInterval(() => nextBtn.click(), autoPlayInterval);
-    };
+    }
 
-    // Navigation buttons with wrap-around
     prevBtn.addEventListener('click', () => {
-      if (container.scrollLeft <= 0) {
-        container.scrollTo({ left: container.scrollWidth - scrollAmount, behavior: 'smooth' });
-      } else {
-        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-      }
+      container.scrollBy({ left: -cardWidth, behavior: 'smooth' });
       resetAutoPlay();
     });
     nextBtn.addEventListener('click', () => {
-      if (container.scrollLeft + scrollAmount >= container.scrollWidth) {
-        container.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-      }
+      container.scrollBy({ left: cardWidth, behavior: 'smooth' });
       resetAutoPlay();
     });
 

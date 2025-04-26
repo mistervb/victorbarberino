@@ -56,6 +56,22 @@ body {
 .testimonials-container::-webkit-scrollbar { display: none; }
 .testimonials-container { -ms-overflow-style: none; scrollbar-width: none; }
 
+.testimonials-container.no-carousel {
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  overflow-x: unset !important;
+  gap: 2rem;
+}
+
+@media (max-width: 600px) {
+  .testimonials-container.no-carousel {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    padding-bottom: 0.5rem;
+  }
+}
+
 .testimonial-card { 
     flex-shrink: 0;
     scroll-snap-align: start;
@@ -457,6 +473,31 @@ section {
     background: var(--orange);
     color: var(--black);
     transform: scale(1.1);
+}
+
+/* Responsividade e controle de overflow para quotes grandes nos cards de depoimento */
+.testimonial-card {
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
+  position: relative;
+}
+.testimonial-quote {
+  max-height: 7.5em;
+  overflow: auto;
+  word-break: break-word;
+  text-overflow: ellipsis;
+  padding-right: 2px;
+}
+@media (max-width: 600px) {
+  .testimonial-card {
+    max-height: 500px;
+  }
+  .testimonial-quote {
+    max-height: 10em;
+  }
 }
 
 /* Contact Form Improvements */

@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType;
 import java.util.Optional;
@@ -51,7 +52,14 @@ public class AdminTestimonialController extends WebController {
     }
 
     @PostMapping("/action/save")
-    public ModelAndView saveTestimonial(@ModelAttribute @Validated TestimonialData testimonialData, BindingResult result, RedirectAttributes ra) {
+    public ModelAndView saveTestimonial(@ModelAttribute @Validated TestimonialData testimonialData,
+                                        BindingResult result,
+                                        @RequestParam(value = "avatarFile", required = false) MultipartFile avatarFile,
+                                        RedirectAttributes ra) {
+        // Garante que o TestimonialData recebe o arquivo (caso não seja setado automaticamente)
+        if (avatarFile != null && !avatarFile.isEmpty()) {
+            testimonialData.setAvatarFile(avatarFile);
+        }
         if (!testimonialData.isAvatarValid()) {
             result.rejectValue("avatar", null, "É necessário fornecer uma foto (URL ou upload de arquivo).");
         }

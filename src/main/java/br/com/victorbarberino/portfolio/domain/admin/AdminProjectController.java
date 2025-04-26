@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.com.victorbarberino.portfolio.domain.project.ProjectData;
 import br.com.victorbarberino.portfolio.domain.project.ProjectEntity;
@@ -57,7 +58,14 @@ public class AdminProjectController extends WebController {
     }
 
     @PostMapping("/action/save")
-    public ModelAndView saveProject(@ModelAttribute @Validated ProjectData projectData, BindingResult result, RedirectAttributes ra) {
+    public ModelAndView saveProject(@ModelAttribute @Validated ProjectData projectData,
+                                   BindingResult result,
+                                   @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+                                   RedirectAttributes ra) {
+        // Garante que o ProjectData recebe o arquivo (caso não seja setado automaticamente)
+        if (imageFile != null && !imageFile.isEmpty()) {
+            projectData.setImageFile(imageFile);
+        }
         if (!projectData.isImageValid()) {
             result.rejectValue("image", null, "É necessário fornecer uma imagem (URL ou upload de arquivo).");
         }
@@ -67,12 +75,9 @@ public class AdminProjectController extends WebController {
             System.out.println("Deu erro aew");
             if(result.getErrorCount() > 0) {
                 for(ObjectError error : result.getAllErrors()) {
-                    addNotification(NotificationType.error, error.getDefaultMessage());
+                    System.out.println(error.getDefaultMessage());
                 }
-            } else {
-                addNotification(NotificationType.error, "Ocorreu um erro desconhecido ao salvar o projeto.");
             }
-            
             return dispatchMv(mv);
         }
         try {

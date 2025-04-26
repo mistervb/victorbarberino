@@ -59,3 +59,34 @@
     white-space: nowrap;
   }
 }
+
+@media (max-width: 600px) {
+  .contacts-container {
+    padding: 8px 2px 8px 2px;
+  }
+  .filters {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .filters input {
+    width: 100%;
+    font-size: 1.07em;
+  }
+  .contacts-table-wrapper {
+    width: 100vw;
+    overflow-x: auto;
+    margin: 0 -8px;
+    padding: 0;
+  }
+  .contacts-table {
+    min-width: 500px;
+    font-size: 1.05em;
+  }
+  .contacts-table th, .contacts-table td {
+    padding: 7px 5px;
+    font-size: 1em;
+  }
+  .contacts-table th {
+    font-size: 1.03em;
+  }
+}
