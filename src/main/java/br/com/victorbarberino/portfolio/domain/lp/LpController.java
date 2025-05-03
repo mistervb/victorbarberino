@@ -1,6 +1,7 @@
 package br.com.victorbarberino.portfolio.domain.lp;
 
 import br.com.victorbarberino.portfolio.domain.project.ProjectService;
+import br.com.victorbarberino.portfolio.domain.section.SectionService;
 import br.com.victorbarberino.portfolio.domain.testimonial.TestimonialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,8 @@ public class LpController {
     private ProjectService projectService;
     @Autowired
     private TestimonialService testimonialService;
+    @Autowired
+    private SectionService sectionService;
 
     @GetMapping
     public ModelAndView dispatchLandingPageView() {
@@ -26,6 +29,10 @@ public class LpController {
         mv.addObject("actualYear", actualYear);
         mv.addObject("projects", projectService.getAllProjects());
         mv.addObject("testimonials", testimonialService.getAllTestimonials());
+        
+        // Adiciona as seções visíveis para controlar o que aparece no menu e na página
+        mv.addObject("sections", sectionService.getVisibleSections());
+        
         return mv;
     }
 }

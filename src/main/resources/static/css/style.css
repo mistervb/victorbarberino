@@ -24,6 +24,8 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    /* Melhoria para suavizar scrolling */
+    scroll-behavior: smooth;
 }
 
 .bg-orange {
@@ -47,6 +49,9 @@ body {
     touch-action: pan-x;
     -webkit-overflow-scrolling: touch;
     user-select: none;
+    /* Força aceleração por hardware */
+    transform: translateZ(0);
+    will-change: scroll-position;
 }
 
 .testimonials-container.active {
@@ -171,16 +176,27 @@ section {
     margin-bottom: 2rem;
 }
 
-/* Navbar Styles */
+/* Navbar Styles - Otimizado para melhor performance */
 .navbar {
-    transition: var(--transition);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(9, 9, 9, 0.95);
+    will-change: background-color, box-shadow;
 }
 
 .backdrop-blur {
     background: rgba(9, 9, 9, 0.8);
-    -webkit-backdrop-filter: var(--macos-blur);
-    backdrop-filter: var(--macos-blur);
+    /* Aplica backdrop-filter apenas para dispositivos não-móveis para melhor performance */
+    @media (min-width: 992px) {
+        -webkit-backdrop-filter: var(--macos-blur);
+        backdrop-filter: var(--macos-blur);
+    }
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Classe adicionada via JS quando o scroll passa de 50px */
+.navbar.scrolled {
+    background: rgba(9, 9, 9, 0.98);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .navbar-brand {
@@ -728,11 +744,20 @@ section {
 /* Cards and Interactive Elements */
 .service-card, .project-card, .testimonial-card {
     background: rgba(22, 23, 22, 0.8);
-    backdrop-filter: var(--macos-blur);
+    /* Aplica backdrop-filter apenas em desktop */
+    @media (min-width: 992px) {
+        -webkit-backdrop-filter: var(--macos-blur);
+        backdrop-filter: var(--macos-blur);
+    }
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px;
     padding: 2rem;
-    transition: var(--transition);
+    /* Otimiza a transição para usar propriedades que não causam reflow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    /* Melhor performance ao renderizar */
+    will-change: transform;
+    /* Força aceleração por hardware/GPU */
+    transform: translateZ(0);
 }
 
 .service-card:hover, .project-card:hover, .testimonial-card:hover {
@@ -774,19 +799,20 @@ section {
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translate3d(0, 20px, 0);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translate3d(0, 0, 0);
     }
 }
 
 .animate-in {
     animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: opacity, transform;
 }
 
-/* Background Pattern */
+/* Background Pattern - otimizado para melhor performance com composite layer */
 .bg-pattern {
     position: fixed;
     top: 0;
@@ -795,16 +821,17 @@ section {
     height: 100%;
     pointer-events: none;
     opacity: 0.05;
+    z-index: -1;
+    transform: translateZ(0);
     background-image:
         linear-gradient(45deg, var(--dark-gray) 25%, transparent 25%),
         linear-gradient(-45deg, var(--dark-gray) 25%, transparent 25%),
         linear-gradient(45deg, transparent 75%, var(--dark-gray) 75%),
         linear-gradient(-45deg, transparent 75%, var(--dark-gray) 75%);
     background-size: 20px 20px;
-    z-index: -1;
 }
 
-
+/* Animação do background - otimizada para melhor performance */
 .bg-animated {
     width: 100%;
     height: 100%;
@@ -822,8 +849,10 @@ section {
     );
     background-size: 40px 40px;
   
-    /* Animation */
+    /* Animation with hardware acceleration */
     animation: bgAnimated 4s linear infinite;
+    will-change: background-position;
+    transform: translateZ(0);
 }
 
 @keyframes bgAnimated {

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head th:replace="~{/fragments/head('VB Admin - Editar Seção')}"></head>
+<link rel="stylesheet" th:href="@{/css/new-project.css}">
+<link rel="stylesheet" th:href="@{/css/sidebar.css}">
+<link rel="stylesheet" th:href="@{/css/topbar.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<body>
+    <div class="container-admin">
+        <div th:replace="~{/fragments/sidebar :: main_sidebar('sections')}"></div>
+        <main class="main-content p-0">
+            <nav th:replace="~{/fragments/topbar :: topbar}"></nav>
+            <div class="content-wrapper">
+                <div class="form-container">
+                    <div class="form-header-flex">
+                        <a href="/admin/sections" class="back-link-ios">
+                            <i class="fas fa-chevron-left"></i> Seções
+                        </a>
+                        <h1 class="form-title">
+                            <i class="fas fa-puzzle-piece"></i>
+                            Editar Seção
+                        </h1>
+                    </div>
+                    <form class="form-card" th:action="@{'/admin/sections/action/update/' + ${sectionData.id}}" th:object="${sectionData}" method="post" style="max-width:600px;width:100%;margin:0 auto;">
+                        <div class="form-group">
+                            <label class="form-label" for="code">Código</label>
+                            <input type="text" class="form-control" id="code" th:field="*{code}" readonly>
+                            <small class="form-text text-muted">O código não pode ser alterado pois está vinculado ao template.</small>
+                            <input type="hidden" th:field="*{code}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="title">Título</label>
+                            <input type="text" class="form-control" id="title" th:field="*{title}" placeholder="Título da seção (ex: Serviços)" required>
+                            <small class="form-text text-muted">Este título será exibido no menu e no cabeçalho da seção.</small>
+                            <div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="displayOrder">Ordem de exibição</label>
+                            <input type="number" class="form-control" id="displayOrder" th:field="*{displayOrder}" placeholder="1" min="1" max="100">
+                            <small class="form-text text-muted">Define a ordem em que as seções aparecem no menu e na página.</small>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="visible" th:field="*{visible}">
+                                <label class="form-check-label" for="visible">Seção visível no portfólio</label>
+                            </div>
+                            <small class="form-text text-muted">Se desmarcado, a seção não aparecerá no menu nem na página principal.</small>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="description">Descrição</label>
+                            <textarea class="form-control" id="description" th:field="*{description}" rows="3" placeholder="Descrição da seção (opcional)"></textarea>
+                            <small class="form-text text-muted">Uma breve descrição sobre o propósito desta seção (apenas para referência administrativa).</small>
+                            <div class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Salvar alterações
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div th:if="${!#lists.isEmpty(notifications)}" th:each="notification : ${notifications}">
+        <div th:replace="~{fragments/notifications :: notifications(${notification.type.name().toLowerCase()}, ${notification.message})}"></div>
+    </div>
+</body>
+</html>

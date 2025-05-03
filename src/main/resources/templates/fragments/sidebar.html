@@ -10,6 +10,10 @@
         </div>
         <div class="sidebar-content text-warning bg-gradient bg-black">
             <nav class="nav-links">
+                <a href="/admin/sections" class="nav-link" th:classappend="${activeLink == 'sections'} ? 'active' : ''">
+                    <i class="fas fa-puzzle-piece"></i>
+                    <span>Seções</span>
+                </a>
                 <a href="/admin/projects" class="nav-link" th:classappend="${activeLink == 'projects'} ? 'active' : ''">
                     <i class="fas fa-laptop-code"></i>
                     <span>Projetos</span>

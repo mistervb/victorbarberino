@@ -20,12 +20,17 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="#sobre">Sobre</a></li>
-          <li class="nav-item"><a class="nav-link" href="#servicos">Serviços</a></li>
-          <li class="nav-item"><a class="nav-link" href="#projetos">Projetos</a></li>
-          <li class="nav-item"><a class="nav-link" href="#depoimentos">Depoimentos</a></li>
-          <li class="nav-item"><a class="nav-link contact-btn" href="#contato">Contato</a></li>
+          <!-- Navlinks dinâmicos, baseados nas seções visíveis configuradas no Admin -->
+          <li class="nav-item" th:each="section : ${sections}" th:if="${section.visible}">
+            <a class="nav-link" th:href="'#' + ${section.code}" th:text="${section.title}"></a>
+            <!-- Para manter o estilo especial do botão de contato -->
+            <th:block th:if="${section.code == 'contato'}" th:remove="tag">
+              <script th:inline="javascript">
+                // Adiciona a classe contact-btn ao último link (contato)
+                document.currentScript.previousElementSibling.classList.add('contact-btn');
+              </script>
+            </th:block>
+          </li>
         </ul>
       </div>
     </div>
@@ -55,10 +60,12 @@
   </div>
 </header>
 
+<!-- Seções dinâmicas, exibidas apenas se estiverem marcadas como visíveis no painel administrativo -->
+
 <!-- About Section -->
-<section id="sobre" class="section-padding">
+<section id="sobre" class="section-padding" th:if="${#lists.contains(#objects.nullSafe(sections.?[visible == true && code == 'sobre'], {}), true)}">
   <div class="container">
-    <h2 class="section-title">Sobre Mim</h2>
+    <h2 class="section-title" th:text="${sections.?[code == 'sobre'][0].title}">Sobre Mim</h2>
     <div class="row">
       <div class="col-lg-6">
         <p class="about-text">
@@ -103,9 +110,9 @@
 </section>
 
 <!-- Services Section -->
-<section id="servicos" class="background-liped section-padding bg-light">
+<section id="servicos" class="background-liped section-padding bg-light" th:if="${#lists.contains(#objects.nullSafe(sections.?[visible == true && code == 'servicos'], {}), true)}">
   <div class="container">
-    <h2 class="section-title">Serviços</h2>
+    <h2 class="section-title" th:text="${sections.?[code == 'servicos'][0].title}">Serviços</h2>
     <div class="row">
       <div class="col-lg-4">
         <div class="service-card">
@@ -133,9 +140,9 @@
 </section>
 
 <!-- Projects Section -->
-<section id="projetos" class="section-padding">
+<section id="projetos" class="section-padding" th:if="${#lists.contains(#objects.nullSafe(sections.?[visible == true && code == 'projetos'], {}), true)}">
   <div class="container">
-    <h2 class="section-title">Projetos</h2>
+    <h2 class="section-title" th:text="${sections.?[code == 'projetos'][0].title}">Projetos</h2>
     <div class="row" id="projects-grid" th:each="project : ${projects}">
       <div class="col-lg-4 col-md-6 mb-4">
         <div class="project-card">
@@ -154,9 +161,9 @@
 </section>
 
 <!-- Testimonials Section -->
-<section id="depoimentos" class="background-liped section-padding bg-dark">
+<section id="depoimentos" class="background-liped section-padding bg-dark" th:if="${#lists.contains(#objects.nullSafe(sections.?[visible == true && code == 'depoimentos'], {}), true)}">
   <div class="container">
-    <h2 class="section-title text-center mb-5">Depoimentos</h2>
+    <h2 class="section-title text-center mb-5" th:text="${sections.?[code == 'depoimentos'][0].title}">Depoimentos</h2>
     <div class="testimonial-carousel">
       <button class="carousel-btn prev-btn position-absolute top-50 start-0 translate-middle-y"><i class="fas fa-chevron-left"></i></button>
       <div class="testimonials-container">
@@ -175,9 +182,9 @@
 </section>
 
 <!-- Contact Section -->
-<section id="contato" class="section-padding">
+<section id="contato" class="section-padding" th:if="${#lists.contains(#objects.nullSafe(sections.?[visible == true && code == 'contato'], {}), true)}">
   <div class="container">
-    <h2 class="section-title">Entre em Contato</h2>
+    <h2 class="section-title" th:text="${sections.?[code == 'contato'][0].title}">Entre em Contato</h2>
     <div class="row justify-content-center">
       <div class="col-lg-6">
         <form id="contact-form" th:action="@{/admin/contacts}" method="post" class="contact-form">
@@ -269,66 +276,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/main.js}"></script>
-<script>
-  const container = document.querySelector('.testimonials-container');
-  const prevBtn = document.querySelector('.prev-btn');
-  const nextBtn = document.querySelector('.next-btn');
-  if (container && prevBtn && nextBtn) {
-    // Initialize carousel
-    container.scrollLeft = 0;
-    // Calcula o tamanho real do card + gap
-    const card = container.querySelector('.testimonial-card');
-    const gap = parseInt(getComputedStyle(container).gap) || 16;
-    const cardWidth = card ? card.offsetWidth + gap : container.offsetWidth;
-    const autoPlayInterval = 7000;
-    let autoPlay = setInterval(() => nextBtn.click(), autoPlayInterval);
-
-    function resetAutoPlay() {
-      clearInterval(autoPlay);
-      autoPlay = setInterval(() => nextBtn.click(), autoPlayInterval);
-    }
-
-    prevBtn.addEventListener('click', () => {
-      container.scrollBy({ left: -cardWidth, behavior: 'smooth' });
-      resetAutoPlay();
-    });
-    nextBtn.addEventListener('click', () => {
-      container.scrollBy({ left: cardWidth, behavior: 'smooth' });
-      resetAutoPlay();
-    });
-
-    // Pause/resume autoplay on hover and touch
-    container.addEventListener('mouseenter', () => clearInterval(autoPlay));
-    container.addEventListener('mouseleave', resetAutoPlay);
-    container.addEventListener('touchstart', () => clearInterval(autoPlay));
-    container.addEventListener('touchend', resetAutoPlay);
-
-    // Drag support via pointer events
-    let isDown = false, startX = 0, scrollStart = 0;
-    container.addEventListener('pointerdown', e => {
-      isDown = true;
-      container.setPointerCapture(e.pointerId);
-      startX = e.clientX - container.getBoundingClientRect().left;
-      scrollStart = container.scrollLeft;
-      clearInterval(autoPlay);
-      container.classList.add('active');
-    });
-    container.addEventListener('pointermove', e => {
-      if (!isDown) return;
-      const x = e.clientX - container.getBoundingClientRect().left;
-      const walk = x - startX;
-      container.scrollLeft = scrollStart - walk;
-    });
-    const endDrag = e => {
-      isDown = false;
-      container.releasePointerCapture(e.pointerId);
-      container.classList.remove('active');
-      resetAutoPlay();
-    };
-    container.addEventListener('pointerup', endDrag);
-    container.addEventListener('pointerleave', endDrag);
-    container.addEventListener('pointercancel', endDrag);
-  }
-</script>
+<script th:src="@{/js/carousel.js}"></script>
 </body>
 </html>

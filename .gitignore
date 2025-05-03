@@ -33,3 +33,7 @@ build/
 .vscode/
 
 /src/main/resources/data.sql
+
+/scripts
+/scripts/**
+/scripts/bd/**

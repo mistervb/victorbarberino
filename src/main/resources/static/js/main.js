@@ -3,50 +3,45 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update current year in footer
     document.getElementById('current-year').textContent = new Date().getFullYear();
 
-    // Navbar scroll effect
-    const navbar = document.querySelector('.navbar');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.style.background = 'rgba(9, 9, 9, 0.98)';
-            navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.3)';
-        } else {
-            navbar.style.background = 'rgba(9, 9, 9, 0.95)';
-            navbar.style.boxShadow = 'none';
-        }
-
-        // Update active nav link based on scroll position
-        updateActiveNavLink();
-    });
-
-    // Smooth scroll for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-
-                // Update active class
-                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-                this.classList.add('active');
+    // Throttle function to limit how often a function can be called
+    function throttle(func, limit) {
+        let inThrottle;
+        return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
             }
-        });
-    });
+        }
+    }
+
+    // Navbar scroll effect - throttled
+    const navbar = document.querySelector('.navbar');
+    const handleNavbarScroll = throttle(() => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    }, 100);
+    
+    window.addEventListener('scroll', handleNavbarScroll);
 
     // Function to update active nav link based on scroll position
-    function updateActiveNavLink() {
+    const updateActiveNavLink = throttle(() => {
         const sections = document.querySelectorAll('section');
         const navLinks = document.querySelectorAll('.nav-link');
+        
+        // Get scroll position with respect to visible viewport
+        let scrollPosition = window.scrollY + 200;
 
         let current = '';
-
         sections.forEach(section => {
             const sectionTop = section.offsetTop;
             const sectionHeight = section.clientHeight;
-            if (window.scrollY >= (sectionTop - sectionHeight/3)) {
+            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
                 current = section.getAttribute('id');
             }
         });
@@ -61,9 +56,43 @@ document.addEventListener('DOMContentLoaded', () => {
         // Special case for home section
         if (window.scrollY < 100) {
             navLinks.forEach(link => link.classList.remove('active'));
-            document.querySelector('a[href="#home"]').classList.add('active');
+            const homeLink = document.querySelector('a[href="#home"]');
+            if (homeLink) homeLink.classList.add('active');
         }
-    }
+    }, 200);
+
+    // Combine scroll handlers to minimize repaints
+    const handleScroll = () => {
+        requestAnimationFrame(() => {
+            handleNavbarScroll();
+            updateActiveNavLink();
+        });
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Smooth scroll for navigation links with improved performance
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const target = document.querySelector(targetId);
+            if (target) {
+                // Use native smooth scrolling which is more performant
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+
+                // Update active class
+                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update URL without page reload for better UX
+                history.pushState(null, null, targetId);
+            }
+        });
+    });
 
     // Initial check for active nav link
     updateActiveNavLink();
@@ -119,9 +148,9 @@ document.addEventListener('DOMContentLoaded', () => {
         contactForm.reset();
     });
 
-    // Animation on scroll
-    const animateOnScroll = () => {
-        const elements = document.querySelectorAll('.service-card, .project-card, .testimonial-card');
+    // Animation on scroll with improved performance
+    const animateOnScroll = throttle(() => {
+        const elements = document.querySelectorAll('.service-card:not(.animate-in), .project-card:not(.animate-in), .testimonial-card:not(.animate-in)');
         elements.forEach(element => {
             const elementTop = element.getBoundingClientRect().top;
             const windowHeight = window.innerHeight;
@@ -129,17 +158,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 element.classList.add('animate-in');
             }
         });
-    };
+    }, 200);
 
-    window.addEventListener('scroll', animateOnScroll);
+    window.addEventListener('scroll', animateOnScroll, { passive: true });
     animateOnScroll(); // Initial check
 });
 
-// Dynamic background pattern
+// Dynamic background pattern - modified to be more performance friendly
 const createBackgroundPattern = () => {
+    // Only create if it doesn't exist yet
+    if (document.querySelector('.bg-pattern')) return;
+    
     const pattern = document.createElement('div');
     pattern.className = 'bg-pattern';
     document.body.appendChild(pattern);
 }
 
-createBackgroundPattern();
+// Defer non-critical operations
+if (document.readyState === 'complete') {
+    createBackgroundPattern();
+} else {
+    window.addEventListener('load', createBackgroundPattern);
+}
