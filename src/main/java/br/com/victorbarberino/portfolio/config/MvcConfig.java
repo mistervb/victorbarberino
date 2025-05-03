@@ -9,7 +9,6 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        // Redireciona para a página principal do admin quando o usuário acessa /admin diretamente
         registry.addViewController("/admin").setViewName("redirect:/admin/sections");
     }
 }

@@ -1,13 +1,11 @@
 package br.com.victorbarberino.portfolio.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -22,7 +20,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/css/**", "/js/**", "/assets/**", "/fonts/**", "/img/**").permitAll()
+                .requestMatchers("/", "/css/**", "/js/**", "/assets/**", "/fonts/**", "/img/**", "/test/**").permitAll()
                 .requestMatchers("/admin/**").authenticated()
             )
             .formLogin(form -> form
@@ -43,30 +41,18 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Autowired
-    private AdminDetailsService adminDetailsService;
-    
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
+    public DaoAuthenticationProvider authenticationProvider(AdminDetailsService adminDetailsService, PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         
         // Set the custom UserDetailsService
         authProvider.setUserDetailsService(adminDetailsService);
         
         // Set the password encoder - this will be used to compare submitted passwords with stored encrypted ones
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPasswordEncoder(passwordEncoder);
         
         return authProvider;
     }
     
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        // Register our authentication provider
-        auth.authenticationProvider(authenticationProvider());
-    }
-    
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 }

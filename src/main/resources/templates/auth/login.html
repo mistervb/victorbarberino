@@ -211,6 +211,9 @@
             </div>
             
             <form action="/authenticate" method="post">
+                <!-- CSRF token -->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                
                 <div class="form-group">
                     <label for="username" class="form-label">Usuário</label>
                     <input type="text" id="username" name="username" class="form-control" placeholder="Digite seu usuário" required autofocus>
