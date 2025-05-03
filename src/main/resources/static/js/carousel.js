@@ -1,101 +1,160 @@
 /**
- * Otimização do carrossel de depoimentos
- * Script separado para melhor organização e performance
+ * Carrossel otimizado para depoimentos e projetos
+ * Implementa navegação por botões, autoplay e interação touch
  */
 document.addEventListener('DOMContentLoaded', () => {
-  const container = document.querySelector('.testimonials-container');
-  const prevBtn = document.querySelector('.prev-btn');
-  const nextBtn = document.querySelector('.next-btn');
+  // Configurações para os diferentes carrosséis
+  const carousels = [
+    {
+      name: 'testimonials',
+      containerSelector: '.testimonials-container',
+      cardSelector: '.testimonial-card',
+      carouselSelector: '.testimonial-carousel',
+      autoPlayInterval: 7000
+    },
+    {
+      name: 'projects',
+      containerSelector: '.projects-container',
+      cardSelector: '.project-card',
+      carouselSelector: '.project-carousel',
+      autoPlayInterval: 8000
+    }
+  ];
   
-  if (container && prevBtn && nextBtn) {
-    // Initialize carousel
+  // Inicializa cada carrossel
+  carousels.forEach(config => {
+    initCarousel(config);
+  });
+  
+  function initCarousel(config) {
+    const container = document.querySelector(config.containerSelector);
+    const carousel = document.querySelector(config.carouselSelector);
+    
+    if (!container || !carousel) return;
+    
+    const prevBtn = carousel.querySelector('.prev-btn');
+    const nextBtn = carousel.querySelector('.next-btn');
+    const cards = container.querySelectorAll(config.cardSelector);
+    
+    if (!cards.length) return;
+    
+    // Reset scroll position
     container.scrollLeft = 0;
     
-    // Calcula o tamanho real do card + gap
-    const card = container.querySelector('.testimonial-card');
+    // Calculate card width with gap
     const gap = parseInt(getComputedStyle(container).gap) || 16;
-    const cardWidth = card ? card.offsetWidth + gap : container.offsetWidth;
-    const autoPlayInterval = 7000;
-    let autoPlay;
+    const cardWidth = cards[0].offsetWidth + gap;
     
-    // Função para iniciar autoplay com requestAnimationFrame
+    // Autoplay functionality
+    let autoPlayTimer = null;
+    
     const startAutoPlay = () => {
-      autoPlay = setTimeout(() => {
-        // Usando requestAnimationFrame para animações mais suaves
-        requestAnimationFrame(() => {
-          container.scrollBy({ left: cardWidth, behavior: 'smooth' });
+      stopAutoPlay();
+      autoPlayTimer = setTimeout(() => {
+        container.scrollBy({
+          left: cardWidth,
+          behavior: 'smooth'
+        });
+        
+        // If we reached the end, scroll back to start
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        if (container.scrollLeft >= maxScroll - 10) {
+          setTimeout(() => {
+            container.scrollTo({
+              left: 0,
+              behavior: 'smooth'
+            });
+          }, 500);
+        }
+        
+        startAutoPlay();
+      }, config.autoPlayInterval);
+    };
+    
+    const stopAutoPlay = () => {
+      if (autoPlayTimer) {
+        clearTimeout(autoPlayTimer);
+        autoPlayTimer = null;
+      }
+    };
+    
+    // Button navigation
+    if (prevBtn && nextBtn) {
+      prevBtn.addEventListener('click', () => {
+        stopAutoPlay();
+        container.scrollBy({
+          left: -cardWidth,
+          behavior: 'smooth'
         });
         startAutoPlay();
-      }, autoPlayInterval);
-    };
-    
-    // Iniciar autoplay
-    startAutoPlay();
-
-    // Função otimizada para manipular cliques nos botões
-    const handleButtonClick = (direction) => {
-      clearTimeout(autoPlay);
-      
-      requestAnimationFrame(() => {
-        container.scrollBy({ 
-          left: direction * cardWidth, 
-          behavior: 'smooth' 
-        });
       });
       
-      startAutoPlay();
-    };
-
-    // Event listeners otimizados
-    prevBtn.addEventListener('click', () => handleButtonClick(-1));
-    nextBtn.addEventListener('click', () => handleButtonClick(1));
-
-    // Pause/resume autoplay on hover and touch - com throttling
-    container.addEventListener('mouseenter', () => clearTimeout(autoPlay));
-    container.addEventListener('mouseleave', startAutoPlay);
-    container.addEventListener('touchstart', () => clearTimeout(autoPlay), { passive: true });
-    container.addEventListener('touchend', startAutoPlay);
-
-    // Suporte a arraste otimizado com pointer events
-    let isDown = false, startX = 0, scrollStart = 0;
-    
-    // Usa passive: true para melhor performance em eventos de toque
-    container.addEventListener('pointerdown', e => {
-      isDown = true;
-      container.setPointerCapture(e.pointerId);
-      startX = e.clientX - container.getBoundingClientRect().left;
-      scrollStart = container.scrollLeft;
-      clearTimeout(autoPlay);
-      container.classList.add('active');
-    }, { passive: true });
-    
-    // Otimiza o movimento usando requestAnimationFrame
-    let ticking = false;
-    container.addEventListener('pointermove', e => {
-      if (!isDown) return;
-      
-      // Evita múltiplas chamadas com requestAnimationFrame
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const x = e.clientX - container.getBoundingClientRect().left;
-          const walk = x - startX;
-          container.scrollLeft = scrollStart - walk;
-          ticking = false;
+      nextBtn.addEventListener('click', () => {
+        stopAutoPlay();
+        container.scrollBy({
+          left: cardWidth,
+          behavior: 'smooth'
         });
-        ticking = true;
-      }
-    }, { passive: true });
+        startAutoPlay();
+      });
+    }
     
-    const endDrag = e => {
-      if (!isDown) return;
-      isDown = false;
-      container.releasePointerCapture(e.pointerId);
+    // Touch/mouse drag functionality
+    let isDragging = false;
+    let startPosition = 0;
+    let startScrollPosition = 0;
+    
+    // Mouse events
+    container.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      container.classList.add('active');
+      startPosition = e.pageX - container.offsetLeft;
+      startScrollPosition = container.scrollLeft;
+      stopAutoPlay();
+    });
+    
+    container.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const x = e.pageX - container.offsetLeft;
+      const walk = (x - startPosition) * 2;
+      container.scrollLeft = startScrollPosition - walk;
+    });
+    
+    window.addEventListener('mouseup', () => {
+      if (!isDragging) return;
+      isDragging = false;
       container.classList.remove('active');
       startAutoPlay();
-    };
+    });
     
-    container.addEventListener('pointerup', endDrag, { passive: true });
-    container.addEventListener('pointerleave', endDrag, { passive: true });
-    container.addEventListener('pointercancel', endDrag, { passive: true });
+    // Touch events
+    container.addEventListener('touchstart', (e) => {
+      isDragging = true;
+      container.classList.add('active');
+      startPosition = e.touches[0].pageX - container.offsetLeft;
+      startScrollPosition = container.scrollLeft;
+      stopAutoPlay();
+    }, { passive: true });
+    
+    container.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      const x = e.touches[0].pageX - container.offsetLeft;
+      const walk = (x - startPosition) * 2;
+      container.scrollLeft = startScrollPosition - walk;
+    }, { passive: true });
+    
+    container.addEventListener('touchend', () => {
+      isDragging = false;
+      container.classList.remove('active');
+      startAutoPlay();
+    }, { passive: true });
+    
+    // Pause autoplay on hover
+    container.addEventListener('mouseenter', stopAutoPlay);
+    container.addEventListener('mouseleave', startAutoPlay);
+    
+    // Start autoplay
+    startAutoPlay();
   }
 });

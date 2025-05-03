@@ -143,9 +143,10 @@
 <section id="projetos" class="section-padding" th:if="${!#lists.isEmpty(sections)} and ${!#lists.isEmpty(sections.?[visible == true && code == 'projetos'])}">
   <div class="container">
     <h2 class="section-title" th:text="${sections.?[code == 'projetos'][0].title}">Projetos</h2>
-    <div class="row" id="projects-grid" th:each="project : ${projects}">
-      <div class="col-lg-4 col-md-6 mb-4">
-        <div class="project-card">
+    <div class="project-carousel">
+      <button class="carousel-btn prev-btn position-absolute top-50 start-0 translate-middle-y"><i class="fas fa-chevron-left"></i></button>
+      <div class="projects-container">
+        <div class="project-card" th:each="project : ${projects}">
           <img th:src="${project.image}" th:alt="${project.title}" class="project-image">
           <div class="project-info">
             <h3 class="project-title" th:text="${project.title}"></h3>
@@ -167,6 +168,7 @@
           </div>
         </div>
       </div>
+      <button class="carousel-btn next-btn position-absolute top-50 end-0 translate-middle-y"><i class="fas fa-chevron-right"></i></button>
     </div>
   </div>
 </section>
