@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
     <aside th:fragment="main_sidebar(activeLink)" class="sidebar">
         <div class="sidebar-header bg-gradient bg-black">
@@ -9,6 +9,17 @@
             </button>
         </div>
         <div class="sidebar-content text-warning bg-gradient bg-black">
+            <!-- Perfil do usuário -->
+            <div class="sidebar-user">
+                <div class="user-info">
+                    <span class="user-name" sec:authentication="name">Admin</span>
+                    <small class="user-role" sec:authentication="principal.authorities">[ROLE_ADMIN]</small>
+                </div>
+                <a href="/logout" class="logout-btn" title="Sair">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+            
             <nav class="nav-links">
                 <a href="/admin/sections" class="nav-link" th:classappend="${activeLink == 'sections'} ? 'active' : ''">
                     <i class="fas fa-puzzle-piece"></i>
@@ -28,6 +39,59 @@
                 </a>
             </nav>
         </div>
+        <style>
+            .sidebar-user {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 1rem;
+                margin-bottom: 1rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .user-info {
+                overflow: hidden;
+            }
+            
+            .user-name {
+                display: block;
+                font-weight: 500;
+                color: var(--text-light);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .user-role {
+                display: block;
+                color: var(--orange);
+                font-size: 0.8rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .logout-btn {
+                color: rgba(255, 255, 255, 0.7);
+                padding: 0.5rem;
+                border-radius: 8px;
+                transition: var(--transition);
+            }
+            
+            .logout-btn:hover {
+                color: var(--orange);
+                background: rgba(255, 255, 255, 0.1);
+            }
+            
+            .sidebar.collapsed .sidebar-user {
+                justify-content: center;
+                padding: 0.75rem;
+            }
+            
+            .sidebar.collapsed .user-info {
+                display: none;
+            }
+        </style>
         <script>
             const sidebar = document.querySelector('.sidebar');
             const toggleBtn = document.getElementById('toggleSidebar');
