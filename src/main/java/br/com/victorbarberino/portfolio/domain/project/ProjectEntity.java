@@ -34,6 +34,12 @@ public class ProjectEntity {
     private String imageContentType;
 
     private List<String> tags;
+    
+    @Column(name = "github_url")
+    private String githubUrl;
+    
+    @Column(name = "project_url")
+    private String projectUrl;
 
     @Column(name = "was_uploaded", nullable = false)
     private boolean wasUploaded = false;
@@ -46,6 +52,8 @@ public class ProjectEntity {
         this.description = data.getDescription();
         this.image = data.getImage();
         this.tags = data.getTags();
+        this.githubUrl = data.getGithubUrl();
+        this.projectUrl = data.getProjectUrl();
         this.createdAt = LocalDateTime.now();
     }
 
@@ -54,6 +62,8 @@ public class ProjectEntity {
         this.description = data.getDescription();
         this.image = data.getImage();
         this.tags = data.getTags();
+        this.githubUrl = data.getGithubUrl();
+        this.projectUrl = data.getProjectUrl();
         this.imageBytes = imageBytes;
         this.imageContentType = imageContentType;
         this.createdAt = LocalDateTime.now();
@@ -66,6 +76,8 @@ public class ProjectEntity {
         data.setDescription(this.description);
         data.setImage(this.image);
         data.setTags(this.tags);
+        data.setGithubUrl(this.githubUrl);
+        data.setProjectUrl(this.projectUrl);
         data.setWasUploaded(this.wasUploaded);
         return data;
     }

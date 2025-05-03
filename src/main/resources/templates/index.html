@@ -156,6 +156,14 @@
             <div class="project-tags" th:if="${project.tags == null || #lists.isEmpty(project.tags) || #strings.toString(project.tags) == '[]'}">
               <span class="no-tags">Sem tags</span>
             </div>
+            <div class="project-links">
+              <a th:if="${project.githubUrl != null && !project.githubUrl.isEmpty()}" th:href="${project.githubUrl}" target="_blank" class="project-link" aria-label="Ver no GitHub">
+                <i class="fab fa-github" aria-hidden="true"></i>
+              </a>
+              <a th:if="${project.projectUrl != null && !project.projectUrl.isEmpty()}" th:href="${project.projectUrl}" target="_blank" class="project-link" aria-label="Ver projeto online">
+                <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+              </a>
+            </div>
           </div>
         </div>
       </div>

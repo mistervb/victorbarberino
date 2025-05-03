@@ -49,6 +49,16 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="form-label" for="githubUrl">Link do GitHub (opcional)</label>
+                        <input type="url" class="form-control" id="githubUrl" th:field="*{githubUrl}" placeholder="https://github.com/seu-usuario/repositorio">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="projectUrl">Link do Projeto (opcional)</label>
+                        <input type="url" class="form-control" id="projectUrl" th:field="*{projectUrl}" placeholder="https://seu-projeto.com">
+                    </div>
+
+                    <div class="form-group">
                         <label class="form-label" for="newTag">Tags</label>
                         <input type="text" class="form-control" id="newTag" placeholder="Digite uma tag e pressione Enter">
                         <!-- inputs de tags são criados dinamicamente pelo JS -->

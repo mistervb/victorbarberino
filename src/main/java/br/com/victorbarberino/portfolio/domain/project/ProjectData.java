@@ -31,6 +31,10 @@ public class ProjectData {
     private String image;
 
     private List<String> tags = new ArrayList<>();
+    
+    private String githubUrl;
+    
+    private String projectUrl;
 
     private String imageInputType;
 

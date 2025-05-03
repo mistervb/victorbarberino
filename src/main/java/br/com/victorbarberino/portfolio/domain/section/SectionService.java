@@ -81,7 +81,7 @@ public class SectionService {
         createDefaultSectionIfNotExists("sobre", "Sobre Mim", 20, true);
         createDefaultSectionIfNotExists("servicos", "Serviços", 30, true);
         createDefaultSectionIfNotExists("projetos", "Projetos", 40, true);
-        createDefaultSectionIfNotExists("depoimentos", "Depoimentos", 50, true);
+        createDefaultSectionIfNotExists("depoimentos", "Depoimentos", 50, false);
         createDefaultSectionIfNotExists("contato", "Contato", 60, true);
     }
     
