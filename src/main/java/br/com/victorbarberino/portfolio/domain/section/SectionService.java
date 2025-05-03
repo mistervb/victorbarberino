@@ -77,20 +77,20 @@ public class SectionService {
     @PostConstruct
     public void initializeDefaultSections() {
         // Verificar e criar seções padrão se não existirem
-        createDefaultSectionIfNotExists("home", "Home", 10);
-        createDefaultSectionIfNotExists("sobre", "Sobre Mim", 20);
-        createDefaultSectionIfNotExists("servicos", "Serviços", 30);
-        createDefaultSectionIfNotExists("projetos", "Projetos", 40);
-        createDefaultSectionIfNotExists("depoimentos", "Depoimentos", 50);
-        createDefaultSectionIfNotExists("contato", "Contato", 60);
+        createDefaultSectionIfNotExists("home", "Home", 10, true);
+        createDefaultSectionIfNotExists("sobre", "Sobre Mim", 20, true);
+        createDefaultSectionIfNotExists("servicos", "Serviços", 30, true);
+        createDefaultSectionIfNotExists("projetos", "Projetos", 40, true);
+        createDefaultSectionIfNotExists("depoimentos", "Depoimentos", 50, true);
+        createDefaultSectionIfNotExists("contato", "Contato", 60, true);
     }
     
-    private void createDefaultSectionIfNotExists(String code, String title, int order) {
+    private void createDefaultSectionIfNotExists(String code, String title, int order, boolean visible) {
         if (!sectionRepository.existsByCode(code)) {
             SectionEntity section = new SectionEntity();
             section.setCode(code);
             section.setTitle(title);
-            section.setVisible(true);
+            section.setVisible(visible);
             section.setDisplayOrder(order);
             section.setDescription("Seção " + title + " do portfólio");
             

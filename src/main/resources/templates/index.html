@@ -43,14 +43,14 @@
           <h1 class="display-4">Victor Barberino</h1>
           <p class="hero-text">Transformando ideias em soluções digitais inovadoras com a precisão e elegância que seu projeto merece.</p>
           <div class="hero-buttons">
-            <a href="#contato" class="cta-button primary">Iniciar Projeto</a>
-            <a href="#projetos" class="cta-button secondary">Ver Projetos</a>
+            <!-- Botões da seção inicial apenas aparecem se as seções de contato e projetos existirem -->
+            <a href="#contato" class="cta-button primary" th:if="${!#lists.isEmpty(sections)} and ${!#lists.isEmpty(sections.?[visible == true && code == 'contato'])}">Iniciar Projeto</a>
+            <a href="#projetos" class="cta-button secondary" th:if="${!#lists.isEmpty(sections)} and ${!#lists.isEmpty(sections.?[visible == true && code == 'projetos'])}">Ver Projetos</a>
           </div>
         </div>
         <div class="col-lg-6">
           <div class="hero-image">
             <div class="profile-placeholder macos-element">
-              <!-- <i class="fas fa-user-circle"></i> -->
               <img th:src="@{/assets/me.png}" alt="Profile">
             </div>
           </div>
@@ -63,7 +63,7 @@
 <!-- Seções dinâmicas, exibidas apenas se estiverem marcadas como visíveis no painel administrativo -->
 
 <!-- About Section -->
-<section id="sobre" class="section-padding" th:if="${#lists.contains(#objects.nullSafe(sections.?[visible == true && code == 'sobre'], {}), true)}">
+<section id="sobre" class="section-padding" th:if="${!#lists.isEmpty(sections)} and ${!#lists.isEmpty(sections.?[visible == true && code == 'sobre'])}">
   <div class="container">
     <h2 class="section-title" th:text="${sections.?[code == 'sobre'][0].title}">Sobre Mim</h2>
     <div class="row">
@@ -110,7 +110,7 @@
 </section>
 
 <!-- Services Section -->
-<section id="servicos" class="background-liped section-padding bg-light" th:if="${#lists.contains(#objects.nullSafe(sections.?[visible == true && code == 'servicos'], {}), true)}">
+<section id="servicos" class="background-liped section-padding bg-light" th:if="${!#lists.isEmpty(sections)} and ${!#lists.isEmpty(sections.?[visible == true && code == 'servicos'])}">
   <div class="container">
     <h2 class="section-title" th:text="${sections.?[code == 'servicos'][0].title}">Serviços</h2>
     <div class="row">
@@ -140,7 +140,7 @@
 </section>
 
 <!-- Projects Section -->
-<section id="projetos" class="section-padding" th:if="${#lists.contains(#objects.nullSafe(sections.?[visible == true && code == 'projetos'], {}), true)}">
+<section id="projetos" class="section-padding" th:if="${!#lists.isEmpty(sections)} and ${!#lists.isEmpty(sections.?[visible == true && code == 'projetos'])}">
   <div class="container">
     <h2 class="section-title" th:text="${sections.?[code == 'projetos'][0].title}">Projetos</h2>
     <div class="row" id="projects-grid" th:each="project : ${projects}">
@@ -150,8 +150,11 @@
           <div class="project-info">
             <h3 class="project-title" th:text="${project.title}"></h3>
             <p th:text="${project.description}"></p>
-            <div th:if="${!#lists.isEmpty(project.tags)}" class="skill-tags">
-              <span class="skill-tag" th:each="tag : ${project.tags}" th:text="${tag}"></span>
+            <div class="project-tags" th:if="${project.tags != null && !#lists.isEmpty(project.tags) && !(#strings.toString(project.tags) == '[]')}">
+              <span class="project-tag" th:each="tag : ${project.tags}" th:text="${tag}"></span>
+            </div>
+            <div class="project-tags" th:if="${project.tags == null || #lists.isEmpty(project.tags) || #strings.toString(project.tags) == '[]'}">
+              <span class="no-tags">Sem tags</span>
             </div>
           </div>
         </div>
@@ -161,7 +164,7 @@
 </section>
 
 <!-- Testimonials Section -->
-<section id="depoimentos" class="background-liped section-padding bg-dark" th:if="${#lists.contains(#objects.nullSafe(sections.?[visible == true && code == 'depoimentos'], {}), true)}">
+<section id="depoimentos" class="background-liped section-padding bg-dark" th:if="${!#lists.isEmpty(sections)} and ${!#lists.isEmpty(sections.?[visible == true && code == 'depoimentos'])}">
   <div class="container">
     <h2 class="section-title text-center mb-5" th:text="${sections.?[code == 'depoimentos'][0].title}">Depoimentos</h2>
     <div class="testimonial-carousel">
@@ -182,7 +185,7 @@
 </section>
 
 <!-- Contact Section -->
-<section id="contato" class="section-padding" th:if="${#lists.contains(#objects.nullSafe(sections.?[visible == true && code == 'contato'], {}), true)}">
+<section id="contato" class="section-padding" th:if="${!#lists.isEmpty(sections)} and ${!#lists.isEmpty(sections.?[visible == true && code == 'contato'])}">
   <div class="container">
     <h2 class="section-title" th:text="${sections.?[code == 'contato'][0].title}">Entre em Contato</h2>
     <div class="row justify-content-center">

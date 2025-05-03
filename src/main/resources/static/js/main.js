@@ -97,48 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial check for active nav link
     updateActiveNavLink();
 
-    // Projects data
-    const projects = [
-        {
-            title: 'Sistema Financeiro',
-            description: '',
-            image: 'https://via.placeholder.com/400x300',
-            tags: []
-        },
-        {
-            title: 'App Mobile',
-            description: 'Aplicativo móvel para iOS e Android desenvolvido com React Native.',
-            image: 'https://via.placeholder.com/400x300',
-            tags: ['React Native', 'JavaScript', 'API REST']
-        },
-        {
-            title: 'Bot de Automação',
-            description: 'Bot para automação de processos com interface visual interativa.',
-            image: 'https://via.placeholder.com/400x300',
-            tags: ['Python', 'Selenium', 'UI/UX']
-        }
-    ];
-
-    // Testimonials data
-    const testimonials = [
-        {
-            text: "Victor desenvolveu uma solução excepcional para nossa empresa. Sua expertise técnica e profissionalismo são notáveis.",
-            author: "João Silva, CEO TechCorp"
-        },
-        {
-            text: "Excelente trabalho no desenvolvimento do nosso aplicativo mobile. Superou todas as expectativas!",
-            author: "Maria Santos, Startup Founder"
-        },
-        {
-            text: "O sistema de automação desenvolvido pelo Victor trouxe resultados impressionantes para nossa operação.",
-            author: "Pedro Oliveira, Diretor de Operações"
-        },
-         {
-             text: "O sistema de automação desenvolvido pelo Victor trouxe resultados impressionantes para nossa operação.",
-             author: "Pedro Oliveira, Diretor de Operações"
-         }
-    ];
-
     // Form submission
     const contactForm = document.getElementById('contact-form');
     contactForm.addEventListener('submit', (e) => {
