@@ -33,14 +33,14 @@ public class AdminProjectController extends WebController {
 
     @GetMapping
     public ModelAndView dispatchAdminProjectsView() {
-        ModelAndView mv = new ModelAndView("/admin/project/projects");
+        ModelAndView mv = new ModelAndView("admin/project/projects");
         mv.addObject("projects", projectService.getAllProjects());
         return dispatchMv(mv);
     }
 
     @GetMapping("/new")
     public ModelAndView dispatchNewProjectView() {
-        ModelAndView mv = new ModelAndView("/admin/project/new-project");
+        ModelAndView mv = new ModelAndView("admin/project/new-project");
         mv.addObject("projectData", new ProjectData());
         return dispatchMv(mv);
     }
@@ -52,7 +52,7 @@ public class AdminProjectController extends WebController {
             addNotification(NotificationType.error, "Projeto não encontrado.");
             return dispatchMv(new ModelAndView("redirect:/admin/projects"));
         }
-        ModelAndView mv = new ModelAndView("/admin/project/edit-project");
+        ModelAndView mv = new ModelAndView("admin/project/edit-project");
         mv.addObject("projectData", project);
         return dispatchMv(mv);
     }
@@ -70,7 +70,7 @@ public class AdminProjectController extends WebController {
             result.rejectValue("image", null, "É necessário fornecer uma imagem (URL ou upload de arquivo).");
         }
         if (result.hasErrors()) {
-            ModelAndView mv = new ModelAndView("/admin/project/new-project");
+            ModelAndView mv = new ModelAndView("admin/project/new-project");
             mv.addObject("projectData", projectData);
             System.out.println("Deu erro aew");
             if(result.getErrorCount() > 0) {
@@ -83,7 +83,7 @@ public class AdminProjectController extends WebController {
         try {
             projectService.saveProject(projectData);
         } catch (Exception e) {
-            ModelAndView mv = new ModelAndView("/admin/project/new-project");
+            ModelAndView mv = new ModelAndView("admin/project/new-project");
             mv.addObject("projectData", projectData);
             addNotification(NotificationType.error, e.getMessage());
             return dispatchMv(mv);
@@ -95,7 +95,7 @@ public class AdminProjectController extends WebController {
     @PostMapping("/action/update/{id}")
     public ModelAndView updateProject(@PathVariable UUID id, @ModelAttribute @Validated ProjectData projectData, BindingResult result, RedirectAttributes ra) {
         if (result.hasErrors()) {
-            ModelAndView mv = new ModelAndView("/admin/project/edit-project");
+            ModelAndView mv = new ModelAndView("admin/project/edit-project");
             StringBuilder errorMessages = new StringBuilder();
             result.getFieldErrors().forEach(error -> errorMessages.append(error.getDefaultMessage()).append("<br/>"));
             addNotification(NotificationType.error, errorMessages.toString());
@@ -104,7 +104,7 @@ public class AdminProjectController extends WebController {
         }
         projectData.setProjectId(id);
         if (projectService.updateProject(projectData) == null) {
-            ModelAndView mv = new ModelAndView("/admin/project/edit-project");
+            ModelAndView mv = new ModelAndView("admin/project/edit-project");
             addNotification(NotificationType.error, "Ocorreu um erro ao atualizar o projeto.");
             mv.addObject("projectData", projectData);
             return dispatchMv(mv);

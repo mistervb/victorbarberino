@@ -20,7 +20,7 @@ public class AdminContactController extends WebController {
 
     @GetMapping
     public ModelAndView dispatchContactView() {
-        ModelAndView mv = new ModelAndView("/admin/contact/contacts");
+        ModelAndView mv = new ModelAndView("admin/contact/contacts");
         mv.addObject("contacts", contactService.listAllContacts());
         return dispatchMv(mv);
     }

@@ -16,7 +16,7 @@ public class GlobalExceptionHandler extends WebController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ModelAndView handleValidationException(MethodArgumentNotValidException ex) {
-        ModelAndView mv = new ModelAndView("/admin/project/new-project");
+        ModelAndView mv = new ModelAndView("admin/project/new-project");
 
         Object target = ex.getBindingResult().getTarget();
         if (target != null) {

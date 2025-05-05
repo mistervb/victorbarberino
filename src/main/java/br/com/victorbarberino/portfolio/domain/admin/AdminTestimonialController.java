@@ -39,14 +39,14 @@ public class AdminTestimonialController extends WebController {
 
     @GetMapping
     public ModelAndView dispatchAdminTestimonialsView() {
-        ModelAndView mv = new ModelAndView("/admin/testimonial/testimonial");
+        ModelAndView mv = new ModelAndView("admin/testimonial/testimonial");
         mv.addObject("testimonials", testimonialService.getAllTestimonials());
         return dispatchMv(mv);
     }
 
     @GetMapping("/new")
     public ModelAndView dispatchNewTestimonialView() {
-        ModelAndView mv = new ModelAndView("/admin/testimonial/new-testimonial");
+        ModelAndView mv = new ModelAndView("admin/testimonial/new-testimonial");
         mv.addObject("testimonialData", new TestimonialData());
         return dispatchMv(mv);
     }
@@ -64,14 +64,14 @@ public class AdminTestimonialController extends WebController {
             result.rejectValue("avatar", null, "É necessário fornecer uma foto (URL ou upload de arquivo).");
         }
         if (result.hasErrors()) {
-            ModelAndView mv = new ModelAndView("/admin/testimonial/new-testimonial");
+            ModelAndView mv = new ModelAndView("admin/testimonial/new-testimonial");
             mv.addObject("testimonialData", testimonialData);
             return dispatchMv(mv);
         }
         try {
             testimonialService.saveTestimonial(testimonialData);
         } catch (Exception e) {
-            ModelAndView mv = new ModelAndView("/admin/testimonial/new-testimonial");
+            ModelAndView mv = new ModelAndView("admin/testimonial/new-testimonial");
             mv.addObject("testimonialData", testimonialData);
             addNotification(NotificationType.error, e.getMessage());
             return dispatchMv(mv);
@@ -87,7 +87,7 @@ public class AdminTestimonialController extends WebController {
             addNotification(NotificationType.error, "Testemunha não encontrada.");
             return dispatchMv(new ModelAndView("redirect:/admin/testimonials"));
         }
-        ModelAndView mv = new ModelAndView("/admin/testimonial/edit-testimonial");
+        ModelAndView mv = new ModelAndView("admin/testimonial/edit-testimonial");
         mv.addObject("testimonialData", data);
         return dispatchMv(mv);
     }
@@ -98,7 +98,7 @@ public class AdminTestimonialController extends WebController {
             result.rejectValue("avatar", "400", "É necessário fornecer uma foto (URL ou upload de arquivo).");
         }
         if (result.hasErrors()) {
-            ModelAndView mv = new ModelAndView("/admin/testimonial/edit-testimonial");
+            ModelAndView mv = new ModelAndView("admin/testimonial/edit-testimonial");
             mv.addObject("testimonialData", testimonialData);
             return dispatchMv(mv);
         }
@@ -107,12 +107,12 @@ public class AdminTestimonialController extends WebController {
             TestimonialData updated = testimonialService.updateTestimonial(testimonialData);
             if (updated == null) {
                 addNotification(NotificationType.error, "Ocorreu um erro ao atualizar depoimento.");
-                ModelAndView mv = new ModelAndView("/admin/testimonial/edit-testimonial");
+                ModelAndView mv = new ModelAndView("admin/testimonial/edit-testimonial");
                 mv.addObject("testimonialData", testimonialData);
                 return dispatchMv(mv);
             }
         } catch (Exception e) {
-            ModelAndView mv = new ModelAndView("/admin/testimonial/edit-testimonial");
+            ModelAndView mv = new ModelAndView("admin/testimonial/edit-testimonial");
             mv.addObject("testimonialData", testimonialData);
             addNotification(NotificationType.error, e.getMessage());
             return dispatchMv(mv);

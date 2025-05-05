@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head th:replace="~{/fragments/head('VB Admin - Editar Testemunha')}"></head>
+<head th:replace="~{fragments/head :: head('VB Admin - Editar Testemunha')}"></head>
 <link rel="stylesheet" th:href="@{/css/new-project.css}">
 <link rel="stylesheet" th:href="@{/css/testimonial.css}">
 <link rel="stylesheet" th:href="@{/css/sidebar.css}">
@@ -8,9 +8,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <body>
     <div class="container-admin">
-        <div th:replace="~{/fragments/sidebar :: main_sidebar('testimonials')}"></div>
+        <div th:replace="~{fragments/sidebar :: main_sidebar('testimonials')}"></div>
         <main class="main-content p-0">
-            <nav th:replace="~{/fragments/topbar :: topbar}"></nav>
+            <nav th:replace="~{fragments/topbar :: topbar}"></nav>
             <div class="content-wrapper">
                 <div class="form-container">
                     <div class="form-header-flex">

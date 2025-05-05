@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{/fragments/head('VB Admin - Editar Projeto')}"></head>
+<head th:replace="~{fragments/head :: head('VB Admin - Editar Projeto')}"></head>
 <link rel="stylesheet" th:href="@{/css/sidebar.css}">
 <link rel="stylesheet" th:href="@{/css/topbar.css}">
 <link rel="stylesheet" th:href="@{/css/new-project.css}">
 <body>
-    <div th:replace="~{/fragments/sidebar :: main_sidebar('projects')}"></div>
+    <div th:replace="~{fragments/sidebar :: main_sidebar('projects')}"></div>
     <div class="main-content p-0">
-        <nav th:replace="~{/fragments/topbar :: topbar}"></nav>
+        <nav th:replace="~{fragments/topbar :: topbar}"></nav>
         <div class="content-wrapper">
             <div class="form-container">
                 <div class="form-header-flex">

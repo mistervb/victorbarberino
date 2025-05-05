@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{/fragments/head('VB Admin - Projetos')}"></head>
+<head th:replace="~{fragments/head :: head('VB Admin - Projetos')}"></head>
 <link rel="stylesheet" th:href="@{/css/sidebar.css}">
 <link rel="stylesheet" th:href="@{/css/topbar.css}">
 <link rel="stylesheet" th:href="@{/css/macos-cards.css}">
 <body>
-    <div th:replace="~{/fragments/sidebar :: main_sidebar('projects')}"></div>
+    <div th:replace="~{fragments/sidebar :: main_sidebar('projects')}"></div>
     <div class="main-content p-0">
-        <nav th:replace="~{/fragments/topbar :: topbar}"></nav>
+        <nav th:replace="~{fragments/topbar :: topbar}"></nav>
         <div class="content-wrapper">
             <h6>Bem-vindo de volta senhor!</h6>
             <div th:if="${#lists.isEmpty(projects)}">
